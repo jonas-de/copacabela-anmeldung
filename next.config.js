@@ -1,5 +1,4 @@
 require('dotenv').config();
-const { sizes } = require('./blocks/Image/sizes');
 
 module.exports = {
   publicRuntimeConfig: {
@@ -10,6 +9,5 @@ module.exports = {
       'localhost',
       // Your domain(s) here
     ],
-    deviceSizes: sizes,
   },
 };
