@@ -24,7 +24,7 @@ const getServerSideProps = withUser( async (context: GetServerSideUserPropsConte
     return { notFound: true }
   }
 
-  if (tribe === 1312 && context.req.user.access !== "1312") {
+  if (tribe === 1312 && context.req.user.tribe !== "1312") {
     return {
       props: {
         participants: [],
@@ -41,7 +41,7 @@ const getServerSideProps = withUser( async (context: GetServerSideUserPropsConte
 
   const participants = await payload.find<TeilnehmerIn>({
     collection: "participants",
-    overrideAccess: true,
+    overrideAccess: false,
     user: context.req.user,
     limit: 500,
     where: query
@@ -56,8 +56,13 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe }> = (
   return (
     <Page showLogin={true} loggedIn={true}>
       <Container fluid="md" className="ps-0 pe-0">
-        <TribeHead tribe={tribe} />
-        <Table dataSource={participants} style={{ overflowX: 'auto' }} pagination={false} rowKey="id">
+        <Table
+          title={() => (<TribeHead tribe={tribe}/>)}
+          dataSource={participants}
+          pagination={false}
+          rowKey="id"
+          scroll={{ x: true }}
+        >
           <Table.Column title="Vorname" dataIndex="firstName" key="firstName" sorter={true} />
           <Table.Column title="Nachname" dataIndex="lastName" key="lastName" sorter={true} />
           <Table.Column

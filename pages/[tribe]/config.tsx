@@ -1,13 +1,20 @@
 import React from 'react';
+import Link from 'next/link'
 import { GetServerSideUserPropsContext, withUser } from '../../utilitites/Authentication';
-import Tribes, { getTribeForNumber, isValidTribeOrDistrict, Tribe } from '../../utilitites/Tribes';
+import Tribes, {
+  getTribeForNumber,
+  isValidTribeOrDistrict,
+  Tribe,
+  TribesWithDistrict
+} from '../../utilitites/Tribes';
 import payload from 'payload';
 import { TeilnehmendenverwalterIn } from '../../payload-types';
 import { Where } from 'payload/types';
 import Page from '../../components/navigation/Page';
 import { Container } from 'react-bootstrap';
 import TribeHead from '../../components/TribeHead';
-import { Table } from 'antd';
+import { Table, Tag } from 'antd';
+import { AccessLevels, getAccessLevelForSlug } from '../../utilitites/Levels';
 
 const getServerSideProps = withUser(async (context: GetServerSideUserPropsContext) => {
   const tribe: number = Number(context.params!["tribe"])
@@ -28,7 +35,7 @@ const getServerSideProps = withUser(async (context: GetServerSideUserPropsContex
 
   const controller = await payload.find<TeilnehmendenverwalterIn>({
     collection: "participantscontroller",
-    overrideAccess: true,
+    overrideAccess: false,
     user: context.req.user,
     limit: 500,
     where: query
@@ -47,7 +54,42 @@ const Config: React.FC<{ tribe: Tribe, controller: TeilnehmendenverwalterIn[] }>
     <Container fluid="md" className="ps-0 pe-0">
       <TribeHead tribe={tribe} />
       <Table dataSource={controller} style={{ overflowX: "auto" }} pagination={false} rowKey="id" >
-        <Table.Column title="Name" dataIndex="name" key="name" sorter={true} />
+        <Table.Column title="Name" dataIndex="name" key="name" sorter={(a, b) => a.name.localeCompare(b.name)} />
+        <Table.Column title="E-Mail" dataIndex="email" key="email" />
+        { tribe.number === 1312 && (
+          <Table.Column
+            title="Zugriff"
+            dataIndex="tribe"
+            key="tribe"
+            sorter={true}
+            filters={TribesWithDistrict.map(t => ({
+              text: t.name,
+              value: String(t.number)
+            }))}
+            render={num => (
+                <Link href={`/${num}/config`}>{getTribeForNumber(num).name}</Link>
+              )
+            }
+            onFilter={(value, record: TeilnehmendenverwalterIn) => record.tribe === String(value) }
+            />
+        )}
+        <Table.Column
+          title="Stufe"
+          dataIndex="level"
+          key="level"
+          sorter={true}
+          filters={AccessLevels.map(level => ({
+            text: level.plural,
+            value: level.slug
+          }))}
+          onFilter={(value, record: TeilnehmendenverwalterIn) => record.level === value}
+          render={ slug => {
+            const level = getAccessLevelForSlug(slug)
+            return (
+            <Tag color={level.color}>{level.singular}</Tag>
+            )
+          }}
+          />
       </Table>
     </Container>
   </Page>

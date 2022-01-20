@@ -20,7 +20,6 @@ const withUser = (handler: GetServerSideUserProps) => {
   return async (context: GetServerSideUserPropsContext) => {
 
     const user = context.req.user
-    console.log(user)
     const payloadCookie = context.req.cookies["payload-token"]
     if (payloadCookie === undefined) {
       return {

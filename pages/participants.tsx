@@ -4,7 +4,7 @@ import React from 'react';
 const getServerSideProps = withUser(async (context: GetServerSideUserPropsContext) => {
   return {
     redirect: {
-      destination: context.req.user.access,
+      destination: context.req.user.tribe,
       permanent: false
     }
   }

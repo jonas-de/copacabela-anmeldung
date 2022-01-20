@@ -36,7 +36,7 @@ const AccessLevels: Level[] = Levels.concat({
   slug: "all",
   singular: "Alle",
   plural: "Alle",
-  color: "grey"
+  color: "cyan"
 })
 
 const isValidLevel = (level: string): boolean => {

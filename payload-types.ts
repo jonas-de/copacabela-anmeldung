@@ -18,7 +18,7 @@ export interface TeilnehmendenverwalterIn {
   loginAttempts?: number;
   lockUntil?: string;
   name: string;
-  access:
+  tribe:
     | '131202'
     | '131203'
     | '131204'
@@ -54,7 +54,7 @@ export interface TeilnehmerIn {
     | '131212'
     | '131213'
     | '131214';
-  birthData: string;
+  birthDate: string;
   eatingBehaviour: 'vegan' | 'vegetarian' | 'meat';
   foodIntolerances?: string;
   swimmer: boolean;

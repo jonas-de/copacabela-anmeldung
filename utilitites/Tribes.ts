@@ -88,5 +88,7 @@ const getTribeForNumber = (tribe: number): Tribe => {
   return  TribesWithDistrict.find(t => t.number == tribe)
 }
 
+const compareTribes = (a: number, b: number): number => a < b ? -1 : 1
+
 export default Tribes
-export { TribesWithDistrict, isValidTribe, isValidTribeOrDistrict, getTribeForNumber }
+export { TribesWithDistrict, isValidTribe, isValidTribeOrDistrict, getTribeForNumber, compareTribes }
