@@ -7,13 +7,24 @@ import {
   Personal, RegisterButton,
   RoleSelection, Swimmer, Vaccinations
 } from './ParticipantsFormComponents';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { hasLegalAge, ParticipantRoles } from '../collections/Participants';
 import { EatingBehaviour } from '../utilitites/Wording';
 
 const ParticipantsForm: React.FC = () => {
 
   const layout: ColProps = { span: 8 }
+  const validateMessages = {
+    required: "${label} ist ein Pflichtfeld",
+    date: {
+      format: "Ungültiger Geburtstag (TT.MM.JJJJ)",
+      parse: "Ungültiger Geburtstag (TT.MM.JJJJ)",
+      invalid: "Ungültiger Geburtstag (TT.MM.JJJJ)"
+    },
+    number: {
+      range: "Ungültige Postleitzahl"
+    }
+  }
 
   const [form] = Form.useForm()
 
@@ -21,6 +32,18 @@ const ParticipantsForm: React.FC = () => {
   const [role, setRole] = useState("participant")
 
   const onBirthDateChange = () => setLegalAge(hasLegalAge(form.getFieldValue('birthDate')));
+
+  const onSubmit = (values: any) => {
+    values.birthDate = values.birthDate.toDate()
+    console.log(values)
+    fetch("/api/participants", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(values)
+    }).then(r => console.log(r))
+  }
 
   return (
     <Form
@@ -31,15 +54,16 @@ const ParticipantsForm: React.FC = () => {
       colon={false}
       requiredMark={false}
       form={form}
-      onFinish={(values) => { console.log(values)}}
+      validateMessages={validateMessages}
       initialValues={{
         role: ParticipantRoles[0].slug,
         food: {
           eatingBehaviour: EatingBehaviour[0].slug
         }
       }}
+      onFinish={onSubmit}
     >
-      <RoleSelection roleChanged={(e) => setRole(e.target.value)} />
+      <RoleSelection roleChanged={e => setRole(e.target.value)} />
       <Personal changeBirthDate={onBirthDateChange}/>
       <ContactData/>
       <Address />

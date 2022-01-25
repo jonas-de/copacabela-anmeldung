@@ -59,6 +59,7 @@ const Role: Field = {
     value: role.slug
   })),
   label: "Rolle",
+  defaultValue: ParticipantRoles[0].slug,
   required: true
 }
 
@@ -125,17 +126,35 @@ const Address: Field = {
       required: true
     },
     {
-      name: "zipCode",
-      type: "number",
-      label: "Postleitzahl",
-      required: true
-    },
-    {
-      name: "city",
-      type: "text",
-      label: "Ort",
-      required: true
-    },
+      type: "row",
+      fields: [
+        {
+          name: "zipCode",
+          type: "text",
+          label: "Postleitzahl",
+          validate: value => {
+            const num = Number(value)
+            if (!Number.isNaN(num) && num >= 10000 && num <= 99999) {
+              return true
+            }
+            return "Keine gültige Postleitzahl"
+          },
+          required: true,
+          admin: {
+            width: "33%"
+          }
+        },
+        {
+          name: "city",
+          type: "text",
+          label: "Ort",
+          required: true,
+          admin: {
+            width: "66%"
+          }
+        }
+      ]
+    }
   ],
   label: "Adresse",
   required: true
@@ -174,6 +193,8 @@ const Food: Field = {
         label: behaviour.name,
         value: behaviour.slug
       })),
+      label: "Essverhalten",
+      defaultValue: EatingBehaviour[0].slug,
       required: true
     },
     {
@@ -295,7 +316,10 @@ const Juleica: Field = {
     }
   ],
   label: "Juleica",
-  required: false
+  required: false,
+  admin: {
+    condition: data => data.role !== "participant"
+  }
 }
 
 const Clearance: Field = {
@@ -316,7 +340,10 @@ const Clearance: Field = {
     }
   ],
   label: "Unbedenklichkeitsbescheinigung",
-  required: false
+  required: false,
+  admin: {
+    condition: data => data.role !== "participant"
+  }
 }
 
 const State: Field = {
@@ -327,6 +354,7 @@ const State: Field = {
     value: state.slug
   }}),
   label: "Status",
+  defaultValue: "new",
   required: true,
 }
 

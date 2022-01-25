@@ -19,20 +19,20 @@ import {
   Genders,
   InsuranceTypes
 } from '../utilitites/Wording';
-import { TribesWithDistrict } from '../utilitites/Tribes';
+import { getTribeForNumber, TribesWithDistrict } from '../utilitites/Tribes';
 import Levels from '../utilitites/Levels';
 import { CloseOutlined, EnterOutlined, PlusOutlined } from '@ant-design/icons';
-import { hasLegalAge, ParticipantRoles } from '../collections/Participants';
+import { ParticipantRoles } from '../collections/Participants';
 import { FormListOperation } from 'antd/es/form/FormList';
 import { StoreValue } from 'rc-field-form/lib/interface';
 import { FormInstance } from 'antd/es/form/Form';
 import { ShouldUpdate } from 'rc-field-form/es/Field';
 import deDE from 'antd/lib/date-picker/locale/de_DE'
 import 'moment/locale/de'
-import { Check } from 'payload/components';
+import { Rule } from 'rc-field-form/es/interface';
 
-
-const layoutNoLabel: ColProps = { offset: 8 }
+const defaultRules: Rule[] = [{ type: "string", required: true }]
+const layoutNoLabel: ColProps = { offset: 8, span: 16 }
 const defaultWidth: { width: number } = { width: 240}
 const doubleWidth: { width: number, maxWidth: string} = { width: 488, maxWidth: "90%" }
 const defaultGutter: [number, number] = [8, 24]
@@ -47,12 +47,12 @@ const Personal: React.FC<{ changeBirthDate: VoidFunction }> = ({ changeBirthDate
     <Input.Group>
       <Row gutter={defaultGutter}>
         <Col>
-          <Form.Item name="firstName" noStyle required>
+          <Form.Item name="firstName" label="Vorname" noStyle required rules={defaultRules}>
             <Input placeholder="Vorname" autoComplete="given-name" style={defaultWidth} />
           </Form.Item>
         </Col>
         <Col>
-          <Form.Item name="lastName" noStyle required>
+          <Form.Item name="lastName" label="Nachname" noStyle required rules={defaultRules}>
             <Input placeholder="Nachname" autoComplete="family-name" style={defaultWidth} />
           </Form.Item>
         </Col>
@@ -61,7 +61,7 @@ const Personal: React.FC<{ changeBirthDate: VoidFunction }> = ({ changeBirthDate
     <Input.Group style={{ marginTop: 24 }}>
       <Row gutter={defaultGutter}>
         <Col>
-          <Form.Item name="birthDate" noStyle required>
+          <Form.Item name="birthDate" label="Geburtstag" noStyle required  rules={[{ type: "date", required: true }]}>
             <DatePicker
               autoComplete="bday"
               locale={deDE}
@@ -74,7 +74,7 @@ const Personal: React.FC<{ changeBirthDate: VoidFunction }> = ({ changeBirthDate
           </Form.Item>
         </Col>
         <Col>
-          <Form.Item name="gender" noStyle required>
+          <Form.Item name="gender" label="Geschlecht" noStyle required rules={[{ required: true }]}>
             <Select placeholder="Geschlecht" style={defaultWidth}>
               { Genders.map(gender => (
                 <Select.Option key={gender.slug} value={gender.slug}>{gender.name}</Select.Option>
@@ -91,8 +91,16 @@ const Membership: React.FC = () => (
     <Input.Group>
       <Row gutter={defaultGutter}>
         <Col>
-          <Form.Item name="tribe" noStyle required>
-            <Select placeholder="Wählen..." showSearch style={defaultWidth}>
+          <Form.Item name="tribe" label="Stamm" noStyle required rules={[{ type: "number", required: true }]}>
+            <Select
+              placeholder="Wählen..."
+              showSearch
+              style={defaultWidth}
+              filterOption={(inputValue, option) => {
+                const tribe = getTribeForNumber(option!.value as number)
+                return tribe.name.startsWith(inputValue) || String(tribe.number).startsWith(inputValue)
+              }}
+            >
               {
                 TribesWithDistrict.map(tribe => (
                   <Select.Option key={tribe.number} value={tribe.number}>
@@ -105,7 +113,7 @@ const Membership: React.FC = () => (
           </Form.Item>
         </Col>
         <Col>
-          <Form.Item name="level" noStyle required>
+          <Form.Item name="level" label="Stufe" noStyle required rules={defaultRules}>
             <Select placeholder="Wählen..." showSearch style={defaultWidth}>
               { Levels.map(level => (
                 <Select.Option key={level.slug} value={level.slug}>
@@ -121,7 +129,7 @@ const Membership: React.FC = () => (
 )
 
 const Swimmer: React.FC = () => (
-  <Form.Item name="swimmer" label="Schwimmer:in" required>
+  <Form.Item name="swimmer" label="Schwimmer:in" required rules={[{ type: "boolean", required: true }]}>
     <Radio.Group>
       <Radio value={true}>Ja</Radio>
       <Radio value={false}>Nein</Radio>
@@ -131,17 +139,28 @@ const Swimmer: React.FC = () => (
 
 const Address: React.FC = () => (
   <Form.Item label="Adresse">
-    <Form.Item name={["address", "street"]} required>
+    <Form.Item
+      name={["address", "street"]}
+      required
+      rules={defaultRules}
+      messageVariables={{ label: "Straße"}}
+    >
       <Input
         placeholder="Straße & Hausnummer"
         autoComplete="street-address"
-        style={{ width: 488, maxWidth: "90%" }}
+        style={doubleWidth}
       />
     </Form.Item>
     <Input.Group>
       <Row gutter={defaultGutter}>
         <Col>
-          <Form.Item name={["address", "postCode"]} noStyle required>
+          <Form.Item
+            name={["address", "zipCode"]}
+            label="Postleitzahl"
+            noStyle
+            required
+            rules={[ { type: "number", min: 10000, max: 99999, required: true}]}
+          >
             <InputNumber
               controls={false}
               placeholder="Postleitzahl"
@@ -151,7 +170,7 @@ const Address: React.FC = () => (
           </Form.Item>
         </Col>
         <Col>
-          <Form.Item name={["address", "city"]} noStyle required>
+          <Form.Item name={["address", "city"]} label="Ort" noStyle required rules={defaultRules}>
             <Input
               placeholder="Ort"
               autoComplete="address-level2"
@@ -181,7 +200,7 @@ const FoodIntolerances: React.FC = () => (
 )
 
 const HealthInsurance: React.FC = () => (
-  <Form.Item name="healthInsurance" label="Krankenversicherung" required>
+  <Form.Item name="healthInsurance" label="Krankenversicherung" required rules={defaultRules}>
     <Radio.Group>
       { InsuranceTypes.map(insurance => (
         <Radio key={insurance.slug} value={insurance.slug}>
@@ -193,20 +212,20 @@ const HealthInsurance: React.FC = () => (
 )
 
 const Diseases: React.FC = () => (
-  <Form.Item label="Krankheiten" name="healthInformation">
+  <Form.Item label="Krankheiten, ..." name="healthInformation">
     <Input.TextArea style={doubleWidth}/>
   </Form.Item>
 )
 
 const Vaccinations: React.FC = () => (
   <>
-    <Form.Item name={["vaccinations", "tetanus"]} label="Tetanus-Impfung" required>
+    <Form.Item name={["vaccinations", "tetanus"]} label="Tetanus-Impfung" required rules={[{ required: true, type: "boolean" }]}>
       <Radio.Group>
         <Radio value={true}>Ja</Radio>
         <Radio value={false}>Nein</Radio>
       </Radio.Group>
     </Form.Item>
-    <Form.Item name={["vaccinations", "fsme"]} label="FSME-Impfung" required>
+    <Form.Item name={["vaccinations", "fsme"]} label="FSME-Impfung" required rules={[{ required: true, type: "boolean" }]}>
       <Radio.Group>
         <Radio value={true}>Ja</Radio>
         <Radio value={false}>Nein</Radio>
@@ -216,7 +235,7 @@ const Vaccinations: React.FC = () => (
 )
 
 const CovidVaccination: React.FC = () => (
-  <Form.Item label="Corona-Impfstatus" name={["vaccinations", "covid"]} required>
+  <Form.Item label="Corona-Impfstatus" name={["vaccinations", "covid"]} required rules={defaultRules}>
     <Select style={doubleWidth}>
       { CovidVaccinationStates.map(state => (
         <Select.Option key={state.slug} value={state.slug}>
@@ -232,12 +251,12 @@ const ContactData: React.FC = () => (
     <Input.Group>
       <Row gutter={defaultGutter}>
         <Col>
-          <Form.Item name="email" noStyle required>
-            <Input type="email" autoComplete="email" placeholder={"E-Mail"} style={defaultWidth} />
+          <Form.Item name="email" label="E-Mail" noStyle required rules={[{ type: "email", required: true }]}>
+            <Input type="email" autoComplete="email" placeholder="E-Mail" style={defaultWidth} />
           </Form.Item>
         </Col>
         <Col>
-          <Form.Item name="phoneNumber" noStyle required>
+          <Form.Item name="phoneNumber" noStyle>
             <Input type="tel" autoComplete="tel" placeholder={"Telefonnummer (optional)"} style={defaultWidth} />
           </Form.Item>
         </Col>
@@ -291,12 +310,12 @@ const Contacts: React.FC<{ form: FormInstance, legalAge: boolean }> = ({ form, l
       </Row>
       <Row gutter={defaultGutter} align="middle">
         <Col>
-          <Form.Item name={[name, "name"]} noStyle>
+          <Form.Item name={[name, "name"]} label="Name" noStyle rules={defaultRules}>
             <Input type="name" placeholder="Name" style={defaultWidth} />
           </Form.Item>
         </Col>
         <Col>
-          <Form.Item name={[name, "phoneNumber"]} noStyle>
+          <Form.Item name={[name, "phoneNumber"]} label="Telefonnummer" noStyle rules={defaultRules}>
             <Input type="tel" placeholder="Telefonnummer" style={defaultWidth} />
           </Form.Item>
         </Col>
@@ -337,8 +356,8 @@ const Comments: React.FC = () => (
   </Form.Item>
 )
 
-const RoleSelection: React.FC = ({ roleChanged }) => (
-  <Form.Item name="role" label="Rolle" required>
+const RoleSelection: React.FC<{ roleChanged: (e: any) => void }> = ({ roleChanged }) => (
+  <Form.Item name="role" label="Rolle" required rules={defaultRules}>
     <Radio.Group onChange={roleChanged}>
       { ParticipantRoles.map(role => (
         <Radio key={role.slug} value={role.slug}>{ role.name }</Radio>
@@ -352,7 +371,6 @@ const LeaderInformation: React.FC<{ form: FormInstance }> = ({ form }) => {
   const [nami, setNami] = useState(false)
 
   const updateNami = () => {
-    console.log(form.getFieldsValue())
     form.resetFields(["clearance.id"])
     setNami(!nami)
   }
@@ -364,7 +382,7 @@ const LeaderInformation: React.FC<{ form: FormInstance }> = ({ form }) => {
           <Row gutter={defaultGutter}>
             <Col>
               <Form.Item name={["juleica", "number"]} noStyle>
-                <Input placeholder="Juleica-Nummer" style={defaultWidth} />
+                <Input placeholder="Juleica-Nummer (optional)" style={defaultWidth} />
               </Form.Item>
             </Col>
             <Col>
@@ -402,7 +420,7 @@ const LeaderInformation: React.FC<{ form: FormInstance }> = ({ form }) => {
 }
 
 const RegisterButton: React.FC = () => (
-  <Form.Item wrapperCol={layoutNoLabel}>
+  <Form.Item label=" ">
     <Button type="primary" htmlType="submit" style={doubleWidth}>Anmelden</Button>
   </Form.Item>
 )
