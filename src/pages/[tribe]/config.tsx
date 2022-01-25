@@ -8,7 +8,7 @@ import Tribes, {
   TribesWithDistrict
 } from '../../utilitites/Tribes';
 import payload from 'payload';
-import { TeilnehmendenverwalterIn } from '../../payload-types';
+import { TeilnehmendenverwalterIn } from '../../../payload-types';
 import { Where } from 'payload/types';
 import Page from '../../components/navigation/Page';
 import { Container } from 'react-bootstrap';

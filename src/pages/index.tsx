@@ -19,7 +19,7 @@ import Header from '../components/Header'
 import { GetServerSideUserPropsContext } from '../utilitites/Authentication';
 import { Contacts } from '../components/ParticipantsFormComponents';
 import ParticipantsForm from '../components/ParticipantsForm';
-import { hasLegalAge } from '../collections/Participants';
+import { hasLegalAge } from '../utilitites/Persons';
 
 const getServerSideProps = (context: GetServerSideUserPropsContext) => {
   return {

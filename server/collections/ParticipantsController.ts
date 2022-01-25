@@ -1,7 +1,7 @@
 import { CollectionConfig, Where } from 'payload/types';
-import { isValidTribe, TribesWithDistrict } from '../utilitites/Tribes';
-import Levels, { AccessLevels, isValidLevel } from '../utilitites/Levels';
-import { TeilnehmendenverwalterIn, User } from '../payload-types';
+import { isValidTribe, TribesWithDistrict } from '../../src/utilitites/Tribes';
+import Levels, { AccessLevels, isValidLevel } from '../../src/utilitites/Levels';
+import { TeilnehmendenverwalterIn, User } from '../../payload-types';
 import { Access } from 'payload/config';
 
 export type ParticipantsControllerUser = (TeilnehmendenverwalterIn | User) & { collection: string }

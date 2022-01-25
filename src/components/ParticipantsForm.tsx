@@ -8,8 +8,8 @@ import {
   RoleSelection, Swimmer, Vaccinations
 } from './ParticipantsFormComponents';
 import React, { useState } from 'react';
-import { hasLegalAge, ParticipantRoles } from '../collections/Participants';
 import { EatingBehaviour } from '../utilitites/Wording';
+import { hasLegalAge, ParticipantRoles } from '../utilitites/Persons';
 
 const ParticipantsForm: React.FC = () => {
 

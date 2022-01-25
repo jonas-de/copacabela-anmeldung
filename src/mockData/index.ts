@@ -1,5 +1,5 @@
 import payload from 'payload';
-import { TeilnehmendenverwalterIn, TeilnehmerIn } from '../payload-types';
+import { TeilnehmendenverwalterIn, TeilnehmerIn } from '../../payload-types';
 import Levels from '../utilitites/Levels';
 import Tribe from '../pages/[tribe]';
 import Tribes from '../utilitites/Tribes';

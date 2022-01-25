@@ -22,7 +22,7 @@ import {
 import { getTribeForNumber, TribesWithDistrict } from '../utilitites/Tribes';
 import Levels from '../utilitites/Levels';
 import { CloseOutlined, EnterOutlined, PlusOutlined } from '@ant-design/icons';
-import { ParticipantRoles } from '../collections/Participants';
+import { ParticipantRoles } from '../utilitites/Persons';
 import { FormListOperation } from 'antd/es/form/FormList';
 import { StoreValue } from 'rc-field-form/lib/interface';
 import { FormInstance } from 'antd/es/form/Form';

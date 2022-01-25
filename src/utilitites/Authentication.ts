@@ -1,7 +1,7 @@
 import { GetServerSidePropsResult, GetServerSidePropsContext, GetServerSideProps } from 'next';
 import { IncomingMessage } from 'http';
 import { NextApiRequestCookies } from 'next/dist/server/api-utils';
-import { TeilnehmendenverwalterIn, User } from '../payload-types';
+import { TeilnehmendenverwalterIn, User } from '../../payload-types';
 import { ParsedUrlQuery } from 'querystring';
 import { PreviewData } from 'next/types';
 

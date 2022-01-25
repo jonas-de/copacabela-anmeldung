@@ -1,18 +1,22 @@
 import { CollectionConfig, Field, Where } from 'payload/types';
-import Tribes, { TribesWithDistrict } from '../utilitites/Tribes';
+import Tribes, { TribesWithDistrict } from '../../src/utilitites/Tribes';
 import {
   CovidVaccinationStates,
   EatingBehaviour,
   Genders,
   InsuranceTypes,
   Wording
-} from '../utilitites/Wording';
-import { TeilnehmendenverwalterIn, TeilnehmerIn, User } from '../payload-types';
-import { RegistrationStates } from '../utilitites/Wording';
-import Levels from '../utilitites/Levels';
+} from '../../src/utilitites/Wording';
+import { TeilnehmendenverwalterIn, TeilnehmerIn, User } from '../../payload-types';
+import { RegistrationStates } from '../../src/utilitites/Wording';
+import Levels from '../../src/utilitites/Levels';
 import ParticipantsController, { ParticipantsControllerUser } from './ParticipantsController';
 import { Access } from 'payload/config';
 import moment, { Moment } from 'moment';
+import { PDFDocument } from 'pdf-lib';
+const fs = require("fs")
+
+import { ParticipantRoles } from '../../src/utilitites/Persons';
 
 const ParticipantsQuery = (user: ParticipantsControllerUser) => {
   if (user.collection == "users") {
@@ -34,22 +38,6 @@ const ParticipantsQuery = (user: ParticipantsControllerUser) => {
 }
 
 const ParticipantsAccess: Access = ({ req: { user } }: { req: { user: ParticipantsControllerUser }}) => ParticipantsQuery(user)
-
-export type ParticipantRole = Wording
-const ParticipantRoles: ParticipantRole[] = [
-  {
-    slug: "participant",
-    name: "Teilnehmer:in"
-  },
-  {
-    slug: "leader",
-    name: "Leiter:in"
-  },
-  {
-    slug: "helper",
-    name: "Helfer:in"
-  }
-]
 
 const Role: Field = {
   name: "role",
@@ -425,22 +413,44 @@ const Participants: CollectionConfig = {
     update: ParticipantsAccess,
     delete: ParticipantsAccess,
   },
-}
+  hooks: {
+    afterChange: [
+      async ({ doc, req, operation }) => {
+        console.log(operation)
+        if (operation === "create") {
 
-const getAge = (birthDate: Moment) => {
-  const belaStart = moment("04.06.2022", "DD.MM.YYYY")
-  return belaStart.diff(birthDate, "years")
-}
+          if (typeof window === undefined) {
+            console.log("Server")
+          }
 
-const hasLegalAge = (birthDate: Moment | undefined) => {
-  if (birthDate === undefined) {
-    return false
+          try {
+            const pdfData = fs.readFileSync("Anmeldung.pdf")
+
+            const pdf = await PDFDocument.load(pdfData)
+            const form = pdf.getForm()
+            const firstName = form.getTextField("Vorname")
+            const gender = form.getRadioGroup("Geschlecht")
+            const contacts = form.getTextField("Notfallkontakte")
+            firstName.setText(doc.firstName)
+            gender.select("m")
+            const pdfBytes = await pdf.save()
+            fs.writeFileSync("Anmeldetest.pdf", pdfBytes)
+            console.log("success")
+          } catch (error) {
+            console.log(error)
+          }
+
+
+
+
+        }
+
+      }
+    ]
   }
-  return getAge(birthDate) >= 18
 }
 
 export default Participants
-export { ParticipantRoles, hasLegalAge }
 
 
 

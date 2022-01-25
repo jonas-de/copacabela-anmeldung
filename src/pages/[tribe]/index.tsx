@@ -8,7 +8,7 @@ import Tribes, {
   Tribe
 } from '../../utilitites/Tribes';
 import payload from 'payload';
-import { TeilnehmerIn } from '../../payload-types';
+import { TeilnehmerIn } from '../../../payload-types';
 import Page from '../../components/navigation/Page';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Table, Tag } from 'antd';
