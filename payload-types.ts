@@ -29,9 +29,8 @@ export interface TeilnehmendenverwalterIn {
     | '131210'
     | '131212'
     | '131213'
-    | '131214'
     | '1312';
-  level: 'woelflinge' | 'jupfis' | 'pfadis' | 'rover' | 'all';
+  level: 'woelflinge' | 'jupfis' | 'pfadis' | 'rover' | 'all' | 'kitchen';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -39,9 +38,19 @@ export interface TeilnehmendenverwalterIn {
  */
 export interface TeilnehmerIn {
   id: string;
-  gender: 'female' | 'male' | 'divers';
+  role: 'participant' | 'leader' | 'helper';
+  orderId: number;
   firstName: string;
   lastName: string;
+  birthDate: string;
+  gender: 'female' | 'male' | 'divers';
+  email: string;
+  phoneNumber?: string;
+  address: {
+    street: string;
+    zipCode: string;
+    city: string;
+  };
   tribe:
     | '131202'
     | '131203'
@@ -53,37 +62,50 @@ export interface TeilnehmerIn {
     | '131210'
     | '131212'
     | '131213'
-    | '131214';
-  birthDate: string;
-  eatingBehaviour: 'vegan' | 'vegetarian' | 'meat';
-  foodIntolerances?: string;
+    | '1312';
+  level: 'woelflinge' | 'jupfis' | 'pfadis' | 'rover' | 'none';
+  food: {
+    eatingBehaviour: 'vegetarian' | 'vegan' | 'meat';
+    intolerances?: string;
+  };
+  vaccinations: {
+    tetanus: boolean;
+    fsme: boolean;
+    covid: 'na' | 'no' | 'yes' | 'boostered';
+  };
+  diseases?: string;
+  healthInsurance: 'gkv' | 'pkv';
   swimmer: boolean;
+  legalGuardian?: {
+    name?: string;
+    phoneNumber?: string;
+  };
+  contacts?: {
+    name: string;
+    phoneNumber: string;
+    id?: string;
+  }[];
+  comments?: string;
+  juleica?: {
+    number?: string;
+    terminates?: string;
+  };
+  clearance?: {
+    idNumber?: string;
+    nami?: boolean;
+  };
+  course?: string;
+  receivedRegistration: boolean;
+  receivedLeaderInfo: boolean;
+  receivedPhotoPermission: 'no' | 'yes' | 'never';
+  review: {
+    by?: string;
+    at?: string;
+    course: boolean;
+    juleica: boolean;
+    clearance: boolean;
+  };
   state: 'new' | 'confirmed' | 'cancelled';
-  level?: 'woelflinge' | 'jupfis' | 'pfadis' | 'rover';
-  registration?: string | Anmeldung;
-  photopermission?: string | Fotoerlaubnis;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "registrationforms".
- */
-export interface Anmeldung {
-  id: string;
-  url?: string;
-  filename?: string;
-  mimeType?: string;
-  filesize?: number;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "photopermissions".
- */
-export interface Fotoerlaubnis {
-  id: string;
-  url?: string;
-  filename?: string;
-  mimeType?: string;
-  filesize?: number;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

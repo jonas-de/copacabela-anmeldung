@@ -15,6 +15,8 @@ services:
       - NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL}
       - PAYLOAD_PUBLIC_SERVER_URL=${PAYLOAD_PUBLIC_SERVER_URL}
       # - PAYLOAD_LICENSE=${PAYLOAD_LICENSE}
+      - PAYLOAD_CORS=${PAYLOAD_CORS}
+      - PAYLOAD_CSRF=${PAYLOAD_CSRF}
       - SMTP_HOST=${SMTP_HOST}
       - SMTP_USER=${SMTP_USER}
       - SMTP_PASS=${SMTP_PASS}
@@ -28,6 +30,9 @@ services:
     volumes:
       - data_db:/data/db
       - data_config:/data/config
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
 
 volumes:
   data_db:

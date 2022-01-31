@@ -1,0 +1,12 @@
+@import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+@import "../node_modules/antd/dist/antd.css";
+
+:root {
+    --dpsg-blue:#003056
+}
+
+
+
+.header-image {
+    margin: 16px;
+}

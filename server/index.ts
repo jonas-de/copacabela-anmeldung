@@ -19,6 +19,19 @@ payload.init({
   secret: process.env.PAYLOAD_SECRET_KEY ?? "SECRET",
   mongoURL: process.env.MONGO_URL ?? "",
   express: server,
+  email: process.env.SMTP_HOST ? {
+    transportOptions: {
+      host: process.env.SMTP_HOST!,
+      auth: {
+        user: process.env.SMTP_USER!,
+        pass: process.env.SMTP_PASS!
+      },
+      port: process.env.SMTP_PORT!,
+      secure: true
+    },
+    fromName: "CopacaBeLa Anmeldung",
+    fromAddress: process.env.SMTP_USER!
+  } : undefined
 });
 
 if (!process.env.NEXT_BUILD) {
