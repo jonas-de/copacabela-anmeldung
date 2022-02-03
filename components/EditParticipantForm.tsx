@@ -78,17 +78,6 @@ const EditParticipantsForm: React.FC<{ participant: TeilnehmerIn, onCancel: Void
 
   const onBirthDateChange = () => setLegalAge(hasLegalAge(form.getFieldValue('birthDate')));
 
-  console.log(participant)
-  console.log({
-    ...participant,
-    address: {
-      ...participant.address,
-      zipCode: Number(participant.address.zipCode)
-    },
-    tribe: Number(participant.tribe),
-    birthDate: moment(participant.birthDate).format("DD.MM.YYYY")
-  })
-
   return (
     <Form
       size="large"
@@ -106,7 +95,12 @@ const EditParticipantsForm: React.FC<{ participant: TeilnehmerIn, onCancel: Void
           zipCode: Number(participant.address.zipCode)
         },
         tribe: Number(participant.tribe),
-        birthDate: moment(participant.birthDate)
+        birthDate: moment(participant.birthDate),
+        juleica: participant.juleica ? {
+          ...participant.juleica,
+          terminates: participant.juleica.terminates ? moment(participant.juleica.terminates) : undefined
+        } : undefined,
+        course: participant.course ? moment(participant.course) : undefined
       }}
       onFinish={onSubmit}
     >
