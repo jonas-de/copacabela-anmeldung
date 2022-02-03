@@ -34,7 +34,7 @@ const generateRegistration = async (particpant: TeilnehmerIn): Promise<Uint8Arra
     // @ts-ignore
     const createdAt = particpant.createdAt ? moment(particpant.createdAt)
       .format("DD.MM.YYYY") : ""
-    const data: string = `${createdAt}\t${particpant.orderId}}`
+    const data: string = `${createdAt}\t${particpant.orderId}`
 
     const { street, zipCode, city } = particpant.address
     const addressText = `${street}, ${zipCode} ${city}`
