@@ -19,7 +19,12 @@ import {
   Genders,
   InsuranceTypes
 } from '../utilitites/Wording';
-import { District, getTribeForNumber, TribesWithDistrict } from '../utilitites/Tribes';
+import {
+  District,
+  getTribeForNumber,
+  TribesObjectSignUp,
+  TribesWithDistrict
+} from '../utilitites/Tribes';
 import Levels from '../utilitites/Levels';
 import { CloseOutlined, EnterOutlined } from '@ant-design/icons';
 import { ParticipantRoles } from '../utilitites/Persons';
@@ -109,7 +114,7 @@ const Membership: React.FC<{ tribe?: number, role: string}> = ({ tribe, role }) 
                     { District.name }
                   </div>
                 </Select.Option>
-                : TribesWithDistrict.map(tribe => (
+                : Object.values(TribesObjectSignUp).map(tribe => (
                     <Select.Option key={tribe.number} value={tribe.number}>
                       <div>
                         <Image className="pe-2" src={`/images/${tribe.image}`} width={35} height={32} alt={tribe.name}/>
@@ -369,9 +374,12 @@ const Comments: React.FC = () => (
 const RoleSelection: React.FC<{ roleChanged: (e: any) => void }> = ({ roleChanged }) => (
   <Form.Item name="role" label="Rolle" required rules={defaultRules}>
     <Radio.Group onChange={roleChanged}>
-      { ParticipantRoles.map(role => (
+      { // TODO: Add Bezirk
+        /*ParticipantRoles.map(role => (
         <Radio key={role.slug} value={role.slug}>{ role.name }</Radio>
-      ))}
+      )) */ }
+      <Radio key={"participant"} value={"participant"}>Teilnehmer:in</Radio>
+      <Radio key={"leader"} value={"leader"}>Leiter:in</Radio>
     </Radio.Group>
   </Form.Item>
 )
