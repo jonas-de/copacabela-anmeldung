@@ -2,7 +2,7 @@ import { AfterChangeHook } from 'payload/dist/collections/config/types';
 import { TeilnehmerIn } from '../payload-types';
 import fs from 'fs';
 import { PDFDocument } from 'pdf-lib';
-import moment, { Moment } from 'moment';
+import moment, { Moment } from 'moment-timezone';
 import { hasLegalAge } from './Persons';
 import payload from 'payload';
 import { getCovidVaccinationState, getGender } from './Wording';
@@ -19,7 +19,7 @@ const generatePhotoPermission = async (name: string, birthDate: Moment): Promise
     const nameField = form.getTextField("Name")
     const birthDateField = form.getTextField("Geburtstag")
     nameField.setText(name)
-    birthDateField.setText(birthDate.format("DD.MM.YYYY"))
+    birthDateField.setText(birthDate.tz("Europe/Berlin").format("DD.MM.YYYY"))
     form.flatten()
     return await pdfDoc.save()
   } catch (error) {
@@ -32,7 +32,7 @@ const generateRegistration = async (particpant: TeilnehmerIn): Promise<Uint8Arra
   try {
 
     // @ts-ignore
-    const createdAt = particpant.createdAt ? moment(particpant.createdAt)
+    const createdAt = particpant.createdAt ? moment(particpant.createdAt).tz("Europe/Berlin")
       .format("DD.MM.YYYY") : ""
     const data: string = `${createdAt}\t${particpant.orderId}`
 
@@ -60,7 +60,7 @@ const generateRegistration = async (particpant: TeilnehmerIn): Promise<Uint8Arra
     const lastNameField = form.getTextField("Nachname")
     lastNameField.setText(particpant.lastName)
     const birthDateField = form.getTextField("Geburtsdatum")
-    birthDateField.setText(moment(particpant.birthDate).format("DD.MM.YYYY"))
+    birthDateField.setText(moment(particpant.birthDate).tz("Europe/Berlin").format("DD.MM.YYYY"))
     const genderField = form.getTextField("Geschlecht")
     genderField.setText(getGender(particpant.gender).name)
     const mailField = form.getTextField("EMail")
@@ -117,7 +117,7 @@ const generateLeaderInfo = async (participant: TeilnehmerIn): Promise<Uint8Array
     const idField = form.getTextField("IDNummer")
     const courseField = form.getTextField("2d2eDatum")
     juleicaField.setText(participant.juleica?.number || "")
-    juleicaDateField.setText(participant.juleica?.terminates || "")
+    juleicaDateField.setText(participant.juleica?.terminates ? moment(participant.juleica?.terminates).tz("Europe/Berlin").format("DD.MM.YYYY") : "")
     idField.setText(participant.clearance?.nami ? "In NaMi eingetragen" : participant.clearance?.idNumber || "")
     courseField.setText(participant.course || "")
     form.flatten()
