@@ -1,4 +1,4 @@
-import { ColProps, Form, message } from 'antd';
+import { ColProps, Form, message, Result } from 'antd';
 import {
   Address,
   Comments, Conditions,
@@ -38,6 +38,8 @@ const ParticipantsForm: React.FC = () => {
     }
   }
 
+  const [registered, setRegistered] = useState(false)
+
   const [form] = Form.useForm()
 
   const [legalAge, setLegalAge] = useState(false)
@@ -64,13 +66,13 @@ const ParticipantsForm: React.FC = () => {
     const res = await defaultFetch("/api/participants", "POST", values)
     console.log(res.status)
     if (res.ok) {
-      message.success("Erfolgreich angemeldet")
+      setRegistered(true)
     } else {
       message.error(res.statusText)
     }
   }
 
-  return (
+  const RegistrationForm: React.ReactElement = (
     <Form
       size="large"
       className="p-2"
@@ -108,6 +110,20 @@ const ParticipantsForm: React.FC = () => {
       <SubmitButton text="Bedingungen bestätigen und Anmelden" />
       <FurtherInformation />
     </Form>
+  )
+
+  const Success: React.ReactElement = (
+    <Result
+      status="success"
+      title="Erfolgreich angemeldet"
+      subTitle="Du erhälst gleich eine E-Mail mit allen nötigen Dokumenten, die du bitte unterschrieben bei deinem Stamm abgibst"
+    />
+  )
+
+  return (
+    <>
+    { !registered ? RegistrationForm : Success }
+    </>
   )
 }
 

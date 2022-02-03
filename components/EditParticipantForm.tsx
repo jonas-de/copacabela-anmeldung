@@ -54,8 +54,8 @@ const EditParticipantsForm: React.FC<{ participant: TeilnehmerIn, onCancel: Void
     const res = await defaultFetch(`/api/participants/${participant.id}`, "PUT", {
       ...values,
       birthDate: values.birthDate.toDate(),
-      course: values.constructor.toDate(),
-      juleica: values.juleica.terminates ? values.juleica.terminates : undefined
+      course: values.course.toDate(),
+      juleica: values.juleica.terminates ? values.juleica.terminates.toDate() : undefined
     })
     if (res.status === 200) {
       router.reload()
