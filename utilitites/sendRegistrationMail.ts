@@ -119,7 +119,7 @@ const generateLeaderInfo = async (participant: TeilnehmerIn): Promise<Uint8Array
     juleicaField.setText(participant.juleica?.number || "")
     juleicaDateField.setText(participant.juleica?.terminates ? moment(participant.juleica?.terminates).tz("Europe/Berlin").format("DD.MM.YYYY") : "")
     idField.setText(participant.clearance?.nami ? "In NaMi eingetragen" : participant.clearance?.idNumber || "")
-    courseField.setText(participant.course || "")
+    courseField.setText(participant.course ? moment(participant.course).tz("Europe/Berlin").format("DD.MM.YYYY") : "")
     form.flatten()
     return await pdfDoc.save()
   } catch (error) {
