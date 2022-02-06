@@ -50,12 +50,12 @@ const TribesObjectSignUp: { [key: string]: Tribe } = {
     name: "St. Ansgar",
     number: 131208,
     image: "Ansgar.png"
-  },
+  }, */
   131209: {
     name: "Frieden Christi",
     number: 131209,
     image: "Dpsg.png"
-  },*/
+  },
   131210: {
     name: "Swapingo",
     number: 131210,
