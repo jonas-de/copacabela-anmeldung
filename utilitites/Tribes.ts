@@ -70,6 +70,11 @@ const TribesObjectSignUp: { [key: string]: Tribe } = {
     name: "St. Canisius",
     number: 131213,
     image: "Canisius.png"
+  },
+  1312: {
+    name: "Bezirk",
+    number: 1312,
+    image: "Bezirkslogo.jpg"
   }
 }
 

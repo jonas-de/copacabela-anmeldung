@@ -374,12 +374,9 @@ const Comments: React.FC = () => (
 const RoleSelection: React.FC<{ roleChanged: (e: any) => void }> = ({ roleChanged }) => (
   <Form.Item name="role" label="Rolle" required rules={defaultRules}>
     <Radio.Group onChange={roleChanged}>
-      { // TODO: Add Bezirk
-        /*ParticipantRoles.map(role => (
+      {ParticipantRoles.map(role => (
         <Radio key={role.slug} value={role.slug}>{ role.name }</Radio>
-      )) */ }
-      <Radio key={"participant"} value={"participant"}>Teilnehmer:in</Radio>
-      <Radio key={"leader"} value={"leader"}>Leiter:in</Radio>
+      ))}
     </Radio.Group>
   </Form.Item>
 )
