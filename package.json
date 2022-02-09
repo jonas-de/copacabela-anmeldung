@@ -14,7 +14,7 @@
     "build:next": "next build",
     "build:server": "tsc --project tsconfig.server.json",
     "build:payload": "payload build",
-    "build": "NODE_ENV=production npm run build:payload && npm run build:server && NEXT_BUILD=true node dist/index.js",
+    "build": "NODE_ENV=production npm run build:payload && npm run build:server && npm run build:next",
     "dev": "node dev.js",
     "serve": "NODE_ENV=production node dist/index.js"
   },

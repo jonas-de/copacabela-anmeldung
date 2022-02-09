@@ -15,6 +15,7 @@ import { Access } from 'payload/config';
 import { ParticipantRoles } from '../utilitites/Persons';
 import payload from 'payload';
 import sendRegistrationMail from '../utilitites/sendRegistrationMail';
+import { dateArray } from '../utilitites/Fees';
 
 const fs = require("fs")
 
@@ -319,6 +320,20 @@ const Contacts: Field = {
   required: false
 }
 
+const Presence: Field = {
+  name: "presence",
+  type: "group",
+  fields: dateArray.map(date => ({
+      name: String(date),
+      type: "checkbox",
+      label: `am ${date}.`,
+      required: true,
+      defaultValue: true
+    })),
+  label: "Anwesenheit",
+  required: true
+}
+
 const Comments: Field = {
   name: "comments",
   type: "textarea",
@@ -512,6 +527,7 @@ const participantFields: Field[] = [
   Swimmer,
   LegalGuardian,
   Contacts,
+  Presence,
   Comments,
   Juleica,
   Clearance,
@@ -545,6 +561,7 @@ const Participants: CollectionConfig = {
     beforeValidate: [
       async ({ data, req, operation }) => {
         if (operation !== "create") {
+          console.log(data);
           return data
         }
         console.log(data);
@@ -559,7 +576,8 @@ const Participants: CollectionConfig = {
             course: false,
             juleica: false,
             clearance: false
-          }
+          },
+          presence: Object.fromEntries(dateArray.map(date => [String(date), true]))
         }
       }
     ],

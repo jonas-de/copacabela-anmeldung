@@ -13,6 +13,7 @@ import {
 } from '../utilitites/Wording';
 import { getLevelWithNone } from '../utilitites/Levels';
 import Image from 'next/image';
+import { dateObjectToText } from '../utilitites/Fees';
 
 export type ShowParticipantProps = {
   extra: React.ReactNode
@@ -98,7 +99,10 @@ const ParticipantData: React.FC<ShowParticipantProps> = ({ extra, participant, t
           <Table.Column dataIndex={"phoneNumber"} key={"phoneNumber"}/>
         </Table>
       }</Descriptions.Item>
-      <Descriptions.Item label="Anmerkungen">{participant.food.intolerances}</Descriptions.Item>
+      <Descriptions.Item label="Anwesenheit">
+        { dateObjectToText(participant.presence) }
+      </Descriptions.Item>
+      <Descriptions.Item label="Anmerkungen">{participant.comments}</Descriptions.Item>
       { participant.role !== "participant" && (
         <>
           <Descriptions.Item label="Juleica">

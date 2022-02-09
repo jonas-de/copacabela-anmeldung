@@ -5,6 +5,20 @@ readme.md
 tsconfig.json
 tsconfig.server.json
 payload-types.ts
+docker-compose.yml
+docker-compose-server.yml
+Dockerfile
+mockData
+mails/non-inlined
+dev.js
+next-env.d.ts
+.git
+.dockerignore
+.idea
+components
+pages
+server
+
 
 
 ### Node template

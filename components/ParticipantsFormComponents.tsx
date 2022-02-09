@@ -21,8 +21,7 @@ import {
 } from '../utilitites/Wording';
 import {
   District,
-  getTribeForNumber,
-  TribesObjectSignUp,
+  getTribeForNumber, TribesSignUp,
   TribesWithDistrict
 } from '../utilitites/Tribes';
 import Levels from '../utilitites/Levels';
@@ -35,6 +34,7 @@ import deDE from 'antd/lib/date-picker/locale/de_DE';
 import 'moment/locale/de';
 import { Rule } from 'rc-field-form/es/interface';
 import Image from 'next/image';
+import { dateArray } from '../utilitites/Fees';
 
 const defaultRules: Rule[] = [{ type: "string", required: true }]
 const layoutNoLabel: ColProps = { offset: 8, span: 16 }
@@ -91,58 +91,80 @@ const Personal: React.FC<{ changeBirthDate: VoidFunction }> = ({ changeBirthDate
     </Input.Group>
   </Form.Item>
 )
-const Membership: React.FC<{ tribe?: number, role: string}> = ({ tribe, role }) => (
-  <Form.Item label="Stamm & Stufe" style={{ marginTop: -4 }}>
-    <Input.Group>
-      <Row gutter={defaultGutter}>
-        <Col>
-          <Form.Item name="tribe" label="Stamm" noStyle required rules={[{ type: "number", required: true }]}>
-            <Select
-              placeholder="Wählen..."
-              showSearch
-              style={defaultWidth}
-              disabled={ role === "helper" || tribe !== undefined }
-              filterOption={(inputValue, option) => {
-                const tribe = getTribeForNumber(option!.value as number)
-                return tribe.name.startsWith(inputValue) || String(tribe.number).startsWith(inputValue)
-              }}
-            >
-              { role === "helper"
-                ? <Select.Option value={District.number}>
-                  <div style={{ alignItems: "center"}}>
-                    <Image className="pe-2" src={`/images/${District.image}`} width={35} height={32} alt={District.name}/>
-                    { District.name }
-                  </div>
-                </Select.Option>
-                : Object.values(TribesObjectSignUp).map(tribe => (
-                    <Select.Option key={tribe.number} value={tribe.number}>
-                      <div>
-                        <Image className="pe-2" src={`/images/${tribe.image}`} width={35} height={32} alt={tribe.name}/>
-                        { tribe.name }
-                      </div>
-                    </Select.Option>
-                ))
-              }
-            </Select>
-          </Form.Item>
-        </Col>
-        { role !== "helper" && (
+const Membership: React.FC<{ tribe?: number, role: string}> = ({ tribe, role }) => {
+
+  const TribeSelection: () => React.ReactElement[] = () => {
+    if (role === "helper") {
+      return [(
+        <Select.Option value={District.number} key={District.number}>
+          <div style={{ alignItems: "center"}}>
+            <Image className="pe-2" src={`/images/${District.image}`} width={35} height={32} alt={District.name}/>
+            { District.name }
+          </div>
+        </Select.Option>
+      )]
+    }
+    if (tribe !== undefined) {
+      const tribeObject = getTribeForNumber(tribe)
+      return [(
+        <Select.Option value={tribeObject.number} key={tribeObject.number}>
+          <div style={{ alignItems: "center"}}>
+            <Image className="pe-2" src={`/images/${tribeObject.image}`} width={35} height={32} alt={tribeObject.name}/>
+            { District.name }
+          </div>
+        </Select.Option>
+      )]
+    }
+    return TribesSignUp
+        .map(tribe => (
+          <Select.Option key={tribe.number} value={tribe.number}>
+            <div>
+              <Image className="pe-2" src={`/images/${tribe.image}`} width={35} height={32}
+                     alt={tribe.name}/>
+              {tribe.name}
+            </div>
+          </Select.Option>
+        ))
+  }
+
+  return (
+    <Form.Item label="Stamm & Stufe" style={{ marginTop: -4 }}>
+      <Input.Group>
+        <Row gutter={defaultGutter}>
           <Col>
-            <Form.Item name="level" label="Stufe" noStyle required rules={defaultRules}>
-              <Select placeholder="Wählen..." showSearch style={defaultWidth}>
-                { Levels.map(level => (
-                  <Select.Option key={level.slug} value={level.slug}>
-                    { level.singular }
-                  </Select.Option>
-                ))}
+            <Form.Item name="tribe" label="Stamm" noStyle required rules={[{ type: "number", required: true }]}>
+              <Select
+                placeholder="Wählen..."
+                showSearch
+                style={defaultWidth}
+                disabled={ role === "helper" || tribe !== undefined }
+                filterOption={(inputValue, option) => {
+                  const tribe = getTribeForNumber(option!.value as number)
+                  return tribe.name.startsWith(inputValue) || String(tribe.number).startsWith(inputValue)
+                }}
+              >
+                {TribeSelection()}
               </Select>
             </Form.Item>
           </Col>
-        )}
-      </Row>
-    </Input.Group>
-  </Form.Item>
-)
+          { role !== "helper" && (
+            <Col>
+              <Form.Item name="level" label="Stufe" noStyle required rules={defaultRules}>
+                <Select placeholder="Wählen..." showSearch style={defaultWidth}>
+                  { Levels.map(level => (
+                    <Select.Option key={level.slug} value={level.slug}>
+                      { level.singular }
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+          )}
+        </Row>
+      </Input.Group>
+    </Form.Item>
+  )
+}
 
 const Swimmer: React.FC = () => (
   <Form.Item name="swimmer" label="Schwimmer:in" required rules={[{ type: "boolean", required: true }]}>
@@ -288,7 +310,7 @@ const LegalGuardian: React.FC<{ form: FormInstance }> = ({ form }) => (
       </Col>
       <Col>
         <Form.Item name={["legalGuardian", "phoneNumber"]} label="Telefonnummer" noStyle rules={defaultRules} required>
-          <Input type="name" placeholder="Name" style={defaultWidth} />
+          <Input type="name" placeholder="Telefon" style={defaultWidth} />
         </Form.Item>
       </Col>
       <Col>
@@ -364,6 +386,15 @@ const Contacts: React.FC<{ form: FormInstance, needsLegalGuardian: boolean }> = 
   )
 }
 
+const Presence: React.FC = () => (
+  <Form.Item name="presence" label="Anwesenheit">
+    <Checkbox.Group options={dateArray.map(date => ({
+      label: `${String(date).padStart(2, "0")}.`,
+      value: String(date)
+    }))}>
+    </Checkbox.Group>
+  </Form.Item>
+)
 
 const Comments: React.FC = () => (
   <Form.Item name="comments" label="Anmerkungen">
@@ -494,6 +525,7 @@ export {
   LegalGuardian,
   Contacts,
   RoleSelection,
+  Presence,
   Comments,
   LeaderInformation,
   SubmitButton,

@@ -13,7 +13,7 @@ import {
   LeaderInformation,
   LegalGuardian,
   Membership,
-  Personal,
+  Personal, Presence,
   RoleSelection,
   SubmitButton,
   Swimmer,
@@ -25,6 +25,7 @@ import { TeilnehmerIn } from '../payload-types';
 import moment from 'moment';
 import defaultFetch from '../utilitites/defaultFetch';
 import { useRouter } from 'next/router';
+import { dateSelectionToObject } from '../utilitites/Fees';
 
 const EditParticipantsForm: React.FC<{ participant: TeilnehmerIn, onCancel: VoidFunction }> = ({ participant, onCancel }) => {
 
@@ -46,6 +47,8 @@ const EditParticipantsForm: React.FC<{ participant: TeilnehmerIn, onCancel: Void
 
   const onSubmit = async (values: any) => {
 
+    console.log(values);
+
     if (role !== "participant" && !hasLegalAge(values.birthDate)) {
       message.error("Als Leiter- oder Helfer:in musst du min. 18 Jahre alt sein.")
       return
@@ -53,9 +56,13 @@ const EditParticipantsForm: React.FC<{ participant: TeilnehmerIn, onCancel: Void
 
     const res = await defaultFetch(`/api/participants/${participant.id}`, "PUT", {
       ...values,
+      presence: dateSelectionToObject(values.presence),
       birthDate: values.birthDate.toDate(),
-      course: values.course.toDate(),
-      juleica: values.juleica.terminates ? values.juleica.terminates.toDate() : undefined
+      course: values.course ? values.course.toDate() : undefined,
+      juleica: values.juleica ? {
+        ...values.juleica,
+        terminates: values.juleica.terminates ? values.juleica.terminates.toDate() : undefined
+      } : undefined
     })
     if (res.status === 200) {
       router.reload()
@@ -90,6 +97,7 @@ const EditParticipantsForm: React.FC<{ participant: TeilnehmerIn, onCancel: Void
       validateMessages={validateMessages}
       initialValues={{
         ...participant,
+        presence: Object.entries(participant.presence).filter(([, val]) => val).map(([key]) => key),
         address: {
           ...participant.address,
           zipCode: Number(participant.address.zipCode)
@@ -119,6 +127,7 @@ const EditParticipantsForm: React.FC<{ participant: TeilnehmerIn, onCancel: Void
       <Swimmer />
       { !legalAge && <LegalGuardian form={form} /> }
       <Contacts form={form} needsLegalGuardian={!legalAge} />
+      <Presence />
       <Comments />
       <SubmitButton text="Änderung speichern" />
       <CancelButton onClick={() => {

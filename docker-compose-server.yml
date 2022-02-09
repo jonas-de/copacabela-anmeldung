@@ -14,7 +14,7 @@ services:
       - MONGO_URL=${MONGO_URL}
       - NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL}
       - PAYLOAD_PUBLIC_SERVER_URL=${PAYLOAD_PUBLIC_SERVER_URL}
-      # - PAYLOAD_LICENSE=${PAYLOAD_LICENSE}
+      - PAYLOAD_LICENSE=${PAYLOAD_LICENSE}
       - PAYLOAD_CORS=${PAYLOAD_CORS}
       - PAYLOAD_CSRF=${PAYLOAD_CSRF}
       - SMTP_HOST=${SMTP_HOST}
@@ -23,7 +23,7 @@ services:
       - SMTP_PORT=${SMTP_PORT}
 
   mongo:
-    image: mongo
+    image: mongo:4
     restart: unless-stopped
     ports:
       - "27017:27017"

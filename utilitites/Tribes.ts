@@ -70,13 +70,14 @@ const TribesObjectSignUp: { [key: string]: Tribe } = {
     name: "St. Canisius",
     number: 131213,
     image: "Canisius.png"
-  },
-  1312: {
-    name: "Bezirk",
-    number: 1312,
-    image: "Bezirkslogo.jpg"
   }
 }
+
+const TribesSignUp = Object.values(TribesObjectSignUp).concat({
+  name: "Bezirk",
+  number: 1312,
+  image: "Bezirkslogo.jpg"
+})
 
 const TribesObject: { [key: string]: Tribe } = {
   131202: {
@@ -163,4 +164,4 @@ const getTribeForNumber = (tribe: number): Tribe => {
 const compareTribes = (a: number, b: number): number => a < b ? -1 : 1
 
 export default Tribes
-export { TribesWithDistrict, District, isValidTribe, isValidTribeOrDistrict, getTribeForNumber, compareTribes, TribesObjectSignUp }
+export { TribesWithDistrict, District, isValidTribe, isValidTribeOrDistrict, getTribeForNumber, compareTribes, TribesSignUp }

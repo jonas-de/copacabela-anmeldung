@@ -34,24 +34,16 @@ payload.init({
   } : undefined
 });
 
-if (!process.env.NEXT_BUILD) {
-  const nextApp = next({ dev });
-  const nextHandler = nextApp.getRequestHandler();
+const nextApp = next({ dev });
+const nextHandler = nextApp.getRequestHandler();
 
-  server.use(payload.authenticate)
+server.use(payload.authenticate)
 
-  server.get('*', (req, res) => nextHandler(req, res));
-  nextApp.prepare().then(() => {
-    console.log('NextJS started');
+server.get('*', (req, res) => nextHandler(req, res));
+nextApp.prepare().then(() => {
+  console.log('NextJS started');
 
-    server.listen(process.env.PORT, async () => {
-      console.log(`Server listening on ${process.env.PORT}...`);
-    });
-  });
-} else {
   server.listen(process.env.PORT, async () => {
-    console.log('NextJS is now building...');
-    await nextBuild(path.join(__dirname, '../'));
-    process.exit();
+    console.log(`Server listening on ${process.env.PORT}...`);
   });
-}
+});

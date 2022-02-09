@@ -85,6 +85,16 @@ export interface TeilnehmerIn {
     phoneNumber: string;
     id?: string;
   }[];
+  presence: {
+    '4': boolean;
+    '5': boolean;
+    '6': boolean;
+    '7': boolean;
+    '8': boolean;
+    '9': boolean;
+    '10': boolean;
+    '11': boolean;
+  };
   comments?: string;
   juleica?: {
     number?: string;
