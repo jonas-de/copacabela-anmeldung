@@ -20,6 +20,9 @@ import { dateArray } from '../utilitites/Fees';
 const fs = require("fs")
 
 const ParticipantsQuery = (user: ParticipantsControllerUser) => {
+  if (user === undefined) {
+    return false
+  }
   if (user.collection == "users") {
     return true
   }
@@ -43,7 +46,7 @@ const ParticipantsQuery = (user: ParticipantsControllerUser) => {
 
 const ParticipantsAccess: Access = ({ req: { user } }: { req: { user: ParticipantsControllerUser }}) => ParticipantsQuery(user)
 
-const BevoOnlyAccess: FieldAccess = ({ req: { user } }: { req: { user: ParticipantsControllerUser }}): boolean => {
+const BevoOnlyAccess: FieldAccess | Access = ({ req: { user } }: { req: { user: ParticipantsControllerUser }}): boolean => {
   return user && (user.collection === "users" || isBevo(user as TeilnehmendenverwalterIn))
 }
 
@@ -495,10 +498,29 @@ const Review: Field = {
   label: "Überprüfung",
   required: true,
   access: {
-    read: BevoOnlyAccess,
-    update: BevoOnlyAccess
+    read: BevoOnlyAccess as FieldAccess,
+    update: BevoOnlyAccess as FieldAccess
   }
 }
+
+/**** PAYMENT TEST ****/
+
+const budget: Field = {
+  name: "credit",
+  type: "number",
+  label: "Guthaben",
+  required: true,
+  min: 0
+}
+
+const wristband: Field = {
+  name: "wristband",
+  type: "text",
+  label: "ID Armband",
+  required: false
+}
+
+/**********************/
 
 const participantFields: Field[] = [
   Role,
@@ -536,7 +558,9 @@ const participantFields: Field[] = [
   ReceivedLeaderInfo,
   ReceivedPhotoPermission,
   Review,
-  State
+  State,
+  budget,
+  wristband,
 ]
 
 
@@ -561,7 +585,6 @@ const Participants: CollectionConfig = {
     beforeValidate: [
       async ({ data, req, operation }) => {
         if (operation !== "create") {
-          console.log(data);
           return data
         }
         console.log(data);
@@ -577,7 +600,9 @@ const Participants: CollectionConfig = {
             juleica: false,
             clearance: false
           },
-          presence: Object.fromEntries(dateArray.map(date => [String(date), true]))
+          presence: Object.fromEntries(dateArray.map(date => [String(date), true])),
+          credit: 10,
+          wristband: undefined
         }
       }
     ],
@@ -626,48 +651,4 @@ const Participants: CollectionConfig = {
 }
 
 export default Participants
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export { BevoOnlyAccess }

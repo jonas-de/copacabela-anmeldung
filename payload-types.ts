@@ -116,6 +116,8 @@ export interface TeilnehmerIn {
     clearance: boolean;
   };
   state: 'new' | 'confirmed' | 'cancelled';
+  credit: number;
+  wristband?: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
