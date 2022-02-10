@@ -1,7 +1,7 @@
 version: "3"
 services:
   website:
-    image: ghcr.io/jonas-de/copacabela-anmeldung-payment
+    image: ghcr.io/jonas-de/copacabela-anmeldung:payment
     build: .
     restart: unless-stopped
     depends_on:

@@ -13,14 +13,12 @@ export default buildConfig({
     Participants,
     Transactions
   ],
-  /*
   cors: [
     process.env.PAYLOAD_CORS ?? "*"
   ],
   csrf: [
     process.env.PAYLOAD_CSRF ?? "http://localhost"
   ],
-  */
   rateLimit: {
     trustProxy: true
   },
