@@ -36,21 +36,21 @@ const TribesObjectSignUp: { [key: string]: Tribe } = {
     number: 131204,
     image: "Dpsg.png"
   },
-  /* 131206: {
+  131206: {
     name: "Pater Rupert Mayer",
     number: 131206,
     image: "PRM.png"
-  },*/
+  },
   131207: {
     name: "Maximilian Kolbe",
     number: 131207,
     image: "Maxko.png"
   },
-  /* 131208: {
+  131208: {
     name: "St. Ansgar",
     number: 131208,
     image: "Ansgar.png"
-  }, */
+  },
   131209: {
     name: "Frieden Christi",
     number: 131209,

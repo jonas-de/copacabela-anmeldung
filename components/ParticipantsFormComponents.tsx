@@ -24,7 +24,7 @@ import {
   getTribeForNumber, TribesSignUp,
   TribesWithDistrict
 } from '../utilitites/Tribes';
-import Levels from '../utilitites/Levels';
+import Levels, { LevelsWithNone } from '../utilitites/Levels';
 import { CloseOutlined, EnterOutlined } from '@ant-design/icons';
 import { ParticipantRoles } from '../utilitites/Persons';
 import { StoreValue } from 'rc-field-form/lib/interface';
@@ -151,7 +151,7 @@ const Membership: React.FC<{ tribe?: number, role: string}> = ({ tribe, role }) 
             <Col>
               <Form.Item name="level" label="Stufe" noStyle required rules={defaultRules}>
                 <Select placeholder="Wählen..." showSearch style={defaultWidth}>
-                  { Levels.map(level => (
+                  { LevelsWithNone.map(level => (
                     <Select.Option key={level.slug} value={level.slug}>
                       { level.singular }
                     </Select.Option>
