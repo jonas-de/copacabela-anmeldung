@@ -21,11 +21,11 @@ export interface Tribe {
  * List of all tribes in Muenchen-Isar
  */
 const TribesObjectSignUp: { [key: string]: Tribe } = {
-  /* 131202: {
+  131202: {
     name: "Heilig Engel",
     number: 131202,
     image: "Dpsg.png"
-  },*/
+  },
   131203: {
     name: "St. Severin",
     number: 131203,

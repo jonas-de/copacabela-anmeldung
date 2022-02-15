@@ -148,7 +148,7 @@ const ParticipantsController: CollectionConfig = {
   },
   hooks: {
     beforeValidate: [
-      async ({ data, operation}) => {
+      async ({ data, operation, req}) => {
         if (operation === "create" && data) {
           const res = await payload.find({
             collection: "participantscontroller",
@@ -163,7 +163,7 @@ const ParticipantsController: CollectionConfig = {
               ]},
             limit: 1
           })
-          if (res.totalDocs > 0) {
+          if (req!.user.collection !== "users" && res.totalDocs > 0) {
             return {}
           }
           const generator = require("generate-password")
