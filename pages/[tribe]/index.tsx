@@ -159,9 +159,9 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe }> = (
                 return record.tribe == value
               }}
               render={tribe => (
-              // @ts-ignore
-                <Link href={`/${tribe}`}>{Tribes.find(t => t.number == tribe).name}</Link>
-            )} />
+                  // @ts-ignore
+                  <Link href={`/${tribe}`}>{getTribeForNumber(Number(tribe)).name}</Link>
+                )} />
           )}
           <Table.Column
             title="Status"
