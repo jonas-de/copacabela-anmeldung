@@ -128,7 +128,7 @@ const Membership: React.FC<{ tribe?: number, role: string}> = ({ tribe, role }) 
   }
 
   return (
-    <Form.Item label="Stamm & Stufe" style={{ marginTop: -4 }}>
+    <Form.Item label="Stamm & Stufe" style={{ marginTop: -4 }} tooltip={ role === "leader" ? "Wähle deinen Stamm und die Stufe, die du leitest." : undefined}>
       <Input.Group>
         <Row gutter={defaultGutter}>
           <Col>
@@ -445,7 +445,7 @@ const LeaderInformation: React.FC<{ form: FormInstance }> = ({ form }) => {
           </Row>
         </Input.Group>
       </Form.Item>
-      <Form.Item label="Unbedenklichkeitsbescheinigung">
+      <Form.Item label="Unbedenklichkeitsbescheinigung" tooltip="Die ID-Nummer ist die Nummer, die auf der Bestätigung der Einsichtnahme in das erweiterte Führungszeugnis durch das JIZ steht. Wenn du dein Führungszeugnis stattdessen durch das Bundesamt einsehen hast lassen, setze den Haken rechts.">
         <Input.Group>
           <Row gutter={defaultGutter}>
             <Col>
@@ -455,7 +455,7 @@ const LeaderInformation: React.FC<{ form: FormInstance }> = ({ form }) => {
             </Col>
             <Col>
               <Form.Item name={["clearance", "nami"]} style={{ marginBottom: 0 }} valuePropName="checked" initialValue={false}>
-                <Checkbox onChange={updateNami}>In NaMi eingetragen</Checkbox>
+                <Checkbox onChange={updateNami}>Vom Bundesamt überprüft und in NaMi eingetragen</Checkbox>
               </Form.Item>
             </Col>
           </Row>

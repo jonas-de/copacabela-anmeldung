@@ -54,7 +54,7 @@ const TribesObjectSignUp: { [key: string]: Tribe } = {
   131209: {
     name: "Frieden Christi",
     number: 131209,
-    image: "Dpsg.png"
+    image: "FC.png"
   },
   131210: {
     name: "Swapingo",
@@ -113,7 +113,7 @@ const TribesObject: { [key: string]: Tribe } = {
   131209: {
     name: "Frieden Christi",
     number: 131209,
-    image: "Dpsg.png"
+    image: "FC.png"
   },
   131210: {
     name: "Swapingo",
