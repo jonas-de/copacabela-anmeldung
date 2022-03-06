@@ -564,10 +564,10 @@ const Participants: CollectionConfig = {
           console.log(data);
           return data
         }
-        console.log(data);
         const participant = data as TeilnehmerIn
         return {
           ...participant,
+          level: participant.level ? participant.level : "none",
           receivedRegistration: false,
           receivedPhotoPermission: "no",
           receivedLeaderInfo: false,
