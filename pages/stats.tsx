@@ -100,6 +100,7 @@ const Statistics: React.FC<{ stats: AllStats }> = ({ stats }) => {
           dataSource={Object.values(stats)}
           rowKey="name"
           pagination={false}
+          scroll={{ x: true }}
         >
           <Table.Column dataIndex="name" title="Stamm" />
           <Table.Column dataIndex="woelflinge" title="Wölflinge" />
