@@ -25,12 +25,12 @@ const ParticipantsQuery = (user: ParticipantsControllerUser) => {
   }
   const participantController = user as TeilnehmendenverwalterIn
   const query: Where = {}
-  if (participantController.tribe != "1312") {
+  if (participantController.tribe !== "1312") {
     query.tribe = {
       equals: participantController.tribe
     }
   }
-  if (participantController.level != "all") {
+  if (participantController.level !== "all") {
     query.level = {
       equals: participantController.level
     }

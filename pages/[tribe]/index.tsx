@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { GetServerSideUserPropsContext, withUser } from '../../utilitites/Authentication';
-import Tribes, { getTribeForNumber, isValidTribeOrDistrict, Tribe } from '../../utilitites/Tribes';
+import Tribes, {
+  getTribeForNumber,
+  isValidTribeOrDistrict,
+  Tribe,
+  TribesWithDistrict
+} from '../../utilitites/Tribes';
 import payload from 'payload';
 import { TeilnehmerIn } from '../../payload-types';
 import Page from '../../components/navigation/Page';
@@ -22,7 +27,8 @@ const getServerSideProps = withUser( async (context: GetServerSideUserPropsConte
     return { notFound: true }
   }
 
-  if (tribe === 1312 && context.req.user.tribe !== "1312") {
+  if ((tribe === 1312 && context.req.user.tribe !== "1312") ||
+    (tribe === 1312 && context.req.user.tribe === "1312" && context.req.user.level === "kitchen")) {
     return {
       props: {
         participants: [],
@@ -153,7 +159,7 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe }> = (
               title="Stamm"
               dataIndex="tribe"
               key="tribe"
-              filters={Tribes.map(tribe => ({ text: tribe.name, value: tribe.number }))}
+              filters={TribesWithDistrict.map(tribe => ({ text: tribe.name, value: tribe.number }))}
               onFilter={(value, record) => {
                 // @ts-ignore
                 return record.tribe == value

@@ -11,7 +11,9 @@ export type PageProps = {
 const Page: React.FC<PageProps> = ({ showLogin= true, loggedIn= false, children }) => (
   <>
     <Header showLogin={showLogin} loggedIn={loggedIn} />
-    { children }
+    <div className="mb-5 pb-5">
+      { children }
+    </div>
     <Row justify="center" align="middle" gutter={16} style={{ height: 28, position: "fixed", left: 0, bottom: 0, right: 0, background: "ghostwhite" }}>
       <Col><a href="https://dpsg1312.de/wordpress2/">Bezirk München-Isar ❤️</a></Col>
       <Col><a href="https://dpsg1312.de/wordpress2/impressum">Impressum</a></Col>

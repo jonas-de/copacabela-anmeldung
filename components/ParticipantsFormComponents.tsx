@@ -21,8 +21,7 @@ import {
 } from '../utilitites/Wording';
 import {
   District,
-  getTribeForNumber, TribesSignUp,
-  TribesWithDistrict
+  getTribeForNumber, TribesWithDistrict
 } from '../utilitites/Tribes';
 import Levels, { LevelsWithNone } from '../utilitites/Levels';
 import { CloseOutlined, EnterOutlined } from '@ant-design/icons';
@@ -115,7 +114,7 @@ const Membership: React.FC<{ tribe?: number, role: string}> = ({ tribe, role }) 
         </Select.Option>
       )]
     }
-    return TribesSignUp
+    return TribesWithDistrict
         .map(tribe => (
           <Select.Option key={tribe.number} value={tribe.number}>
             <div>

@@ -33,7 +33,7 @@ type Stats = {
 
 const getServerSideProps = withUser( async (context: GetServerSideUserPropsContext) => {
 
-  if (context.req.user.level !== "kitchen" && (context.req.user.tribe !== "1312" || context.req.user.level !== "all")) {
+  if ((context.req.user.level !== "kitchen" && context.req.user.level !== "all") || context.req.user.tribe !== "1312") {
     return {
       notFound: true
     }
@@ -41,8 +41,7 @@ const getServerSideProps = withUser( async (context: GetServerSideUserPropsConte
 
   const participants = await payload.find<TeilnehmerIn>({
     collection: "participants",
-    overrideAccess: false,
-    user: context.req.user,
+    overrideAccess: true,
     limit: 500,
     sort: "lastName",
     depth: 0
