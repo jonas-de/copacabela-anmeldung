@@ -11,7 +11,7 @@ import payload from 'payload';
 import { TeilnehmerIn } from '../../payload-types';
 import Page from '../../components/navigation/Page';
 import { Container } from 'react-bootstrap';
-import { Button, Col, message, Row, Table, Tag } from 'antd';
+import { Button, Col, message, Row, Switch, Table, Tag } from 'antd';
 import Levels, { compareLevelsWithRole, getLevelWithNone } from '../../utilitites/Levels';
 import { compareRegistrationStates, getState, RegistrationStates } from '../../utilitites/Wording';
 import Image from 'next/image';
@@ -20,6 +20,8 @@ import ImageHead from '../../components/ImageHead';
 import { PlusOutlined } from '@ant-design/icons';
 import { ManualParticipantForm } from '../../components/ManualParticipantForm';
 import defaultFetch from '../../utilitites/defaultFetch';
+import { handedInDocuments } from '../../utilitites/DocumentsToHandIn';
+import { dateObjectToText } from '../../utilitites/Fees';
 
 const getServerSideProps = withUser( async (context: GetServerSideUserPropsContext) => {
   const tribe: number = Number(context.params!["tribe"])
@@ -59,6 +61,7 @@ const getServerSideProps = withUser( async (context: GetServerSideUserPropsConte
 
 const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe }> = ({ participants, tribe }) => {
 
+  /*
   const [showNew, setShowNew] = useState(false)
   const submitNew = async (values: any) => {
     const res = await defaultFetch("/api/participants?mail=false", "POST", values)
@@ -69,24 +72,48 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe }> = (
       message.error("Fehler beim Speichern")
     }
   }
+  */
+
+  const [showDocuments, setShowDocuments] = useState(false)
+  const [showPresence, setShowPresence] = useState(false)
+  const [showComments, setShowComments] = useState(false)
 
   return (
     <Page showLogin={true} loggedIn={true}>
       <Container fluid="md" className="ps-0 pe-0">
+        { /*
         <ManualParticipantForm
           tribe={tribe.number === 1312 ? undefined : tribe.number}
           visible={showNew}
           cancel={() => setShowNew(false)}
           complete={submitNew}
           />
+          */ }
         <Table
           title={() => (
             <Row style={{ alignItems: "center"}}>
               <Col>
                 <ImageHead image={tribe.image} text={tribe.name} />
               </Col>
+              { /*
               <Col flex="auto">
                 <Button icon={<PlusOutlined />} style={{ float: "right" }} onClick={() => setShowNew(true)} type="primary">Nutzer:in anlegen</Button>
+              </Col>
+              */ }
+              <Col style={{ marginLeft: "auto", paddingLeft: 32 }}>
+                <Switch checked={showDocuments} onChange={() => { setShowDocuments(!showDocuments)}} />
+                {" "}
+                Abgegebene Dokumente
+              </Col>
+              <Col style={{ paddingLeft: 32 }}>
+                <Switch checked={showPresence} onChange={() => { setShowPresence(!showPresence)}} />
+                {" "}
+                Anwesenheit
+              </Col>
+              <Col style={{ paddingLeft: 32 }}>
+                <Switch checked={showComments} onChange={() => { setShowComments(!showComments)}} />
+                {" "}
+                Anmerkungen
               </Col>
             </Row>
             )}
@@ -130,7 +157,7 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe }> = (
               .concat({ text: "Leiter:innen", value: "leader" })
               .concat({ text: "Helfer:in", value: "helper"})
           }
-            filterMultiple={false}
+            filterMultiple={true}
             onFilter={(value, record: TeilnehmerIn) => {
               if (value === "leader" || value === "helper") {
                 return record.role === value
@@ -174,7 +201,7 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe }> = (
             dataIndex="state"
             key="state"
             filters={RegistrationStates.map(state => ({ text: state.name, value: state.slug }))}
-            filterMultiple={false}
+            filterMultiple={true}
             onFilter={(value, record: TeilnehmerIn) => {
               return record.state === value
             }}
@@ -190,6 +217,39 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe }> = (
               <Tag color={state.color}>{state.name}</Tag>
             )
           }} />
+          { showDocuments && (
+            <Table.Column
+              title="Dokumente"
+              key="documents"
+              filters={[{ text: "Vollständig", value: "all" }, { text: "Unvollständig", value: "missing" }]}
+              filterMultiple={false}
+              onFilter={(value, record: TeilnehmerIn) => {
+                if (value === "all") {
+                  return handedInDocuments(record).complete
+                } else {
+                  return !handedInDocuments(record).complete
+                }
+              }}
+              render={(_, record,) => {
+                return handedInDocuments(record).txt
+              }} />
+          )}
+          { showPresence && (
+          <Table.Column<TeilnehmerIn>
+            title="Anwesenheit"
+            key="presence"
+            filters={[{ text: "Vollständig", value: "all" }, { text: "Unvollständig", value: "missing" }]}
+            render={(_, record,) => {
+              return dateObjectToText(record.presence)
+            }} />
+          )}
+          { showComments && (
+          <Table.Column<TeilnehmerIn>
+            title="Anmerkungen"
+            dataIndex="comments"
+            key="comments"
+          />
+          )}
         </Table>
       </Container>
     </Page>

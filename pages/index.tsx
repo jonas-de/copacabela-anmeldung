@@ -4,6 +4,7 @@ import Header from '../components/Header';
 import { GetServerSideUserPropsContext } from '../utilitites/Authentication';
 import ParticipantsForm from '../components/ParticipantsForm';
 import Page from '../components/navigation/Page';
+import Closed from '../components/RegistrationClosed';
 
 const getServerSideProps = (context: GetServerSideUserPropsContext) => {
   return {
@@ -25,7 +26,8 @@ const page: React.FC = ({ loggedIn }) => {
           <h5>vom 04. - 11. Juni 2022 im Scout Camp Austria</h5>
         </BSRow>
         <BSRow>
-          <ParticipantsForm />
+          { /* <ParticipantsForm /> */ }
+          <Closed />
         </BSRow>
       </Container>
     </Page>

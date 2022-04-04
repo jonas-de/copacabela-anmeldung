@@ -552,7 +552,7 @@ const Participants: CollectionConfig = {
     defaultColumns: ["firstName", "lastName", "tribe", "level", "state"]
   },
   access: {
-    create: () => true,
+    create: () => false,
     read: ParticipantsAccess,
     update: ParticipantsAccess,
     delete: ParticipantsAccess,
