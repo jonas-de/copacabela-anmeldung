@@ -17,8 +17,6 @@ import payload from 'payload';
 import sendRegistrationMail from '../utilitites/sendRegistrationMail';
 import { dateArray } from '../utilitites/Fees';
 
-const fs = require("fs")
-
 const ParticipantsQuery = (user: ParticipantsControllerUser) => {
   if (user.collection == "users") {
     return true
@@ -500,6 +498,19 @@ const Review: Field = {
   }
 }
 
+const CancelledAt: Field = {
+  name: "cancelledAt",
+  type: "date",
+  label: "Storniert am",
+  required: false,
+}
+
+const LateRegistration: Field = {
+  name: "lateRegistration",
+  type: "checkbox",
+  label: "Nachmeldung",
+}
+
 const participantFields: Field[] = [
   Role,
   OrderId,
@@ -536,7 +547,9 @@ const participantFields: Field[] = [
   ReceivedLeaderInfo,
   ReceivedPhotoPermission,
   Review,
-  State
+  State,
+  CancelledAt,
+  LateRegistration,
 ]
 
 

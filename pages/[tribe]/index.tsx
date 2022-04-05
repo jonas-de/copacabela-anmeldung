@@ -55,11 +55,12 @@ const getServerSideProps = withUser( async (context: GetServerSideUserPropsConte
   })
   return { props: {
     participants: participants.docs,
-    tribe: getTribeForNumber(tribe)
+    tribe: getTribeForNumber(tribe),
+      isStavo: context.req.user.level === "all"
   }}
 })
 
-const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe }> = ({ participants, tribe }) => {
+const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe, isStavo: boolean }> = ({ participants, tribe, isStavo }) => {
 
   /*
   const [showNew, setShowNew] = useState(false)
@@ -251,6 +252,11 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe }> = (
           />
           )}
         </Table>
+        { isStavo && (
+          <Button>
+            <a href={`/api/${tribe.number}/download`}>Download</a>
+          </Button>
+        )}
       </Container>
     </Page>
   )

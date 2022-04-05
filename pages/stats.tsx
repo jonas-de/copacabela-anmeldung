@@ -9,6 +9,7 @@ import Page from '../components/navigation/Page';
 import React from 'react';
 import { Container } from 'react-bootstrap';
 import { Table } from 'antd';
+import StatsTable from '../components/StatsTable';
 
 type Stats = {
   name: string,
@@ -95,24 +96,7 @@ const Statistics: React.FC<{ stats: AllStats }> = ({ stats }) => {
   return (
     <Page showLogin={true} loggedIn={true}>
       <Container fluid="md" className="ps-0 pe-0">
-        <Table
-          title={() => (<h1><strong>Statistiken</strong></h1>)}
-          dataSource={Object.values(stats)}
-          rowKey="name"
-          pagination={false}
-          scroll={{ x: true }}
-        >
-          <Table.Column dataIndex="name" title="Stamm" />
-          <Table.Column dataIndex="woelflinge" title="Wölflinge" />
-          <Table.Column dataIndex="jupfis" title="Jupfis" />
-          <Table.Column dataIndex="pfadis" title="Pfadis" />
-          <Table.Column dataIndex="rover" title="Rover:innen" />
-          <Table.Column<Stats> title="Teilnehmer:innen" render={(val, record) => {
-            return <>{record.total - record.leader - record.helper}</>
-          }} />
-          <Table.Column dataIndex="leader" title="Leiter:innen" />
-          <Table.Column dataIndex="total" title="Insgesamt" />
-        </Table>
+        <StatsTable title="Statistiken" stats={stats} />
         <div className="pt-4 pb-4">
           {stats.total.helper} Helfende
         </div>
