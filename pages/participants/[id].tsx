@@ -78,11 +78,13 @@ const Participants: React.FC<{
           text="Anmeldung bestätigen"
         />
       )}
+      { /*
       { participant.state !== "new" && (
           <Button style={{margin: 8}} icon={<RedoOutlined />} onClick={() => updateState("new")}>
             Zurücksetzen
           </Button>
       )}
+      */ }
       { participant.state === "confirmed" && (
           <Button style={{margin: 8}} danger icon={<CloseOutlined />} onClick={() => updateState("cancelled")}>Stornieren</Button>
       )}

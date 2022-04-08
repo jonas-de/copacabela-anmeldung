@@ -71,6 +71,7 @@ const generateCSV = (tns: TeilnehmerIn[]): string => {
     "Geburtsdatum",
     "Geschlecht",
     "E-Mail",
+    "Storniert am",
     "04.",
     "05.",
     "06.",
