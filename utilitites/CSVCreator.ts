@@ -3,8 +3,7 @@ import { getRoleName } from './Persons';
 import { getLevelWithNone } from './Levels';
 import { getGender, getState } from './Wording';
 import { getTribeForNumber } from './Tribes';
-
-const attributes = ["firstName", "lastName", "role", "level", "state", "birthDate", "gender", "email", ]
+import moment from 'moment-timezone';
 
 const generateCSVLine = (tn: TeilnehmerIn): string => {
   const line = [tn.firstName, tn.lastName, tn.orderId]
@@ -13,9 +12,14 @@ const generateCSVLine = (tn: TeilnehmerIn): string => {
   line.push(getRoleName(tn.role))
   line.push(getLevelWithNone(tn.level).singular)
   line.push(getState(tn.state).name)
-  line.push(tn.birthDate)
+  line.push(moment(tn.birthDate).tz("Europe/Berlin").format("DD.MM.YYYY"))
   line.push(getGender(tn.gender).name)
   line.push(tn.email)
+  if (tn.cancelledAt !== undefined) {
+    line.push(moment(tn.cancelledAt).tz("Europe/Berlin").format("DD.MM.YYYY"))
+  } else {
+    line.push("")
+  }
   // Presence
   Object.values(tn.presence).forEach((present) => {
     line.push(present ? "Ja" : "Nein")

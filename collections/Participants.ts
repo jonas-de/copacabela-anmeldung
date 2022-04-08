@@ -16,6 +16,9 @@ import { ParticipantRoles } from '../utilitites/Persons';
 import payload from 'payload';
 import sendRegistrationMail from '../utilitites/sendRegistrationMail';
 import { dateArray } from '../utilitites/Fees';
+import { AfterChangeHook } from 'payload/dist/collections/config/types';
+import { BeforeChangeHook } from 'payload/dist/globals/config/types';
+import moment from 'moment-timezone';
 
 const ParticipantsQuery = (user: ParticipantsControllerUser) => {
   if (user.collection == "users") {
@@ -549,9 +552,20 @@ const participantFields: Field[] = [
   Review,
   State,
   CancelledAt,
-  LateRegistration,
+  // LateRegistration,
 ]
 
+// @ts-ignore
+const setCancelled: BeforeChangeHook = ({ data, operation, originalDoc }) => {
+  if (operation !== "update") {
+    return data
+  }
+
+  if (data.state === "cancelled" && originalDoc.state !== "cancelled") {
+    data.cancelledAt = moment().tz("Europe/Berlin")
+  }
+  return data
+}
 
 const Participants: CollectionConfig = {
   slug: "participants",
@@ -630,7 +644,8 @@ const Participants: CollectionConfig = {
           },
           state: "new"
         }
-      }
+      },
+      setCancelled
     ],
     afterChange: [
       sendRegistrationMail
