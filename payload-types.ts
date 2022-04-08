@@ -8,6 +8,14 @@
 export interface Config {}
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "settings".
+ */
+export interface Einstellungen {
+  id: string;
+  lateRegistration: boolean;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "participantscontroller".
  */
 export interface TeilnehmendenverwalterIn {
@@ -116,6 +124,7 @@ export interface TeilnehmerIn {
     clearance: boolean;
   };
   state: 'new' | 'confirmed' | 'cancelled';
+  cancelledAt?: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
