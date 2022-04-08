@@ -37,7 +37,11 @@ const generateCSVLine = (tn: TeilnehmerIn): string => {
   if (tn.role !== "participant") {
     if (tn.juleica) {
       line.push(tn.juleica.number ?? "")
-      line.push(tn.juleica.terminates ?? "")
+      if (tn.juleica.terminates !== undefined) {
+        line.push(moment(tn.juleica.terminates).tz("Europe/Berlin").format("DD.MM.YYYY"))
+      } else {
+        line.push("")
+      }
     } else {
       line.push("")
       line.push("")

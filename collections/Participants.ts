@@ -562,7 +562,7 @@ const setCancelled: BeforeChangeHook = ({ data, operation, originalDoc }) => {
   }
 
   if (data.state === "cancelled" && originalDoc.state !== "cancelled") {
-    data.cancelledAt = moment().tz("Europe/Berlin")
+    data.cancelledAt = moment().tz("Europe/Berlin").toDate()
   }
   return data
 }
