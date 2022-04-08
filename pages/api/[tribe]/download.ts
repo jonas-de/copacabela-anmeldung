@@ -23,9 +23,20 @@ const handler: NextApiHandler = async (req, res) => {
     res.status(403).json({ error: "No access" })
   }
 
-  const query: Where = user.tribe === "1312" ? {} : {
+  if (user.tribe !== "1312" && tribe !== Number(user.tribe)) {
+    res.status(403).json({ error: "No access" })
+  }
+
+  let query: Where = user.tribe === "1312" ? {} : {
     tribe: {
       equals: user.tribe
+    }
+  }
+  if (user.tribe === "1312" && tribe !== Number(user.tribe)) {
+    query = {
+      tribe: {
+        equals: `${tribe}`
+      }
     }
   }
 
