@@ -48,7 +48,7 @@ const handler: NextApiHandler = async (req, res) => {
     limit: 500,
   })
 
-  res.setHeader('Content-disposition', `attachment; filename=CopacaBeLa-${user.tribe}.csv`);
+  res.setHeader('Content-disposition', `attachment; filename=CopacaBeLa-${tribe}.csv`);
   res.setHeader('Content-type', 'application/csv');
   res.write(CSVCreator(participants.docs));
   res.end();
