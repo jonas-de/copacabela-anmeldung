@@ -125,6 +125,7 @@ export interface TeilnehmerIn {
   };
   state: 'new' | 'confirmed' | 'cancelled';
   cancelledAt?: string;
+  lateRegistration?: boolean;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

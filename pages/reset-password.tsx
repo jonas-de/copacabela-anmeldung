@@ -1,9 +1,10 @@
 import { GetServerSideUserPropsContext } from '../utilitites/Authentication';
 import React from 'react';
-import Header from '../components/Header';
+import Header from '../components/layout/Header';
 import { Container, Row } from 'react-bootstrap';
 import { Button, Form, Input, message } from 'antd';
 import { useRouter } from 'next/router';
+import defaultFetch from '../utilitites/defaultFetch';
 
 const getServerSideProps = (context: GetServerSideUserPropsContext) => {
   if (context.req.user || !context.query.token) {
@@ -29,15 +30,9 @@ const ResetPWPage: React.FC<{ token: string }> = ({ token }) => {
     if (values.password === undefined) {
       await message.error("Gib ein neues Passwort ein")
     } else {
-      const res = await fetch('api/participantscontroller/reset-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      const res = await defaultFetch("api/participantscontroller/reset-password", "POST", {
           password: values.password,
           token
-        })
       })
       if (res.ok) {
         await router.replace("/login")

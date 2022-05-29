@@ -2,15 +2,11 @@ import { buildConfig } from 'payload/config';
 import dotenv from 'dotenv';
 import ParticipantsController from './collections/ParticipantsController';
 import Participants from './collections/Participants';
-import Settings from './globals/Settings';
 
 dotenv.config();
 
 export default buildConfig({
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL ?? "localhost",
-  globals: [
-    Settings,
-  ],
   collections: [
     ParticipantsController,
     Participants

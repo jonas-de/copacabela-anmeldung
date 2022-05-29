@@ -9,19 +9,20 @@ import Tribes, {
 } from '../../utilitites/Tribes';
 import payload from 'payload';
 import { TeilnehmerIn } from '../../payload-types';
-import Page from '../../components/navigation/Page';
+import Page from '../../components/layout/Page';
 import { Container } from 'react-bootstrap';
 import { Button, Col, message, Row, Switch, Table, Tag } from 'antd';
 import Levels, { compareLevelsWithRole, getLevelWithNone } from '../../utilitites/Levels';
 import { compareRegistrationStates, getState, RegistrationStates } from '../../utilitites/Wording';
 import Image from 'next/image';
 import { Where } from 'payload/types';
-import ImageHead from '../../components/ImageHead';
+import ImageHead from '../../components/layout/ImageHead';
 import { PlusOutlined } from '@ant-design/icons';
-import { ManualParticipantForm } from '../../components/ManualParticipantForm';
+import { ManualParticipantForm } from '../../components/participants/form/ManualParticipantForm';
 import defaultFetch from '../../utilitites/defaultFetch';
 import { handedInDocuments } from '../../utilitites/DocumentsToHandIn';
 import { dateObjectToText } from '../../utilitites/Fees';
+import DownloadConfig from '../../components/DownloadConfig';
 
 const getServerSideProps = withUser( async (context: GetServerSideUserPropsContext) => {
   const tribe: number = Number(context.params!["tribe"])
@@ -73,7 +74,9 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe, isSta
       message.error("Fehler beim Speichern")
     }
   }
-  */
+   */
+
+  const [showDownload, setShowDownload] = useState(false)
 
   const [showDocuments, setShowDocuments] = useState(false)
   const [showPresence, setShowPresence] = useState(false)
@@ -83,13 +86,18 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe, isSta
     <Page showLogin={true} loggedIn={true}>
       <Container fluid="md" className="ps-0 pe-0">
         { /*
-        <ManualParticipantForm
-          tribe={tribe.number === 1312 ? undefined : tribe.number}
-          visible={showNew}
-          cancel={() => setShowNew(false)}
-          complete={submitNew}
+          <ManualParticipantForm
+            tribe={tribe.number === 1312 ? undefined : tribe.number}
+            visible={showNew}
+            cancel={() => setShowNew(false)}
+            complete={submitNew}
           />
           */ }
+        <DownloadConfig
+          tribe={tribe.number}
+          visible={showDownload}
+          close={() => setShowDownload(false)}
+          />
         <Table
           title={() => (
             <Row style={{ alignItems: "center"}}>
@@ -98,7 +106,7 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe, isSta
               </Col>
               { /*
               <Col flex="auto">
-                <Button icon={<PlusOutlined />} style={{ float: "right" }} onClick={() => setShowNew(true)} type="primary">Nutzer:in anlegen</Button>
+                <Button icon={<PlusOutlined />} style={{ float: "right" }} onClick={() => setShowNew(true)} type="primary">Teilnehmer:in anlegen</Button>
               </Col>
               */ }
               <Col style={{ marginLeft: "auto", paddingLeft: 32 }}>
@@ -218,6 +226,20 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe, isSta
               <Tag color={state.color}>{state.name}</Tag>
             )
           }} />
+          <Table.Column
+            title="Buchungsart"
+            dataIndex="lateRegistration"
+            key="lateRegistration"
+            filters={[{ text: "Normal", value: false }, { text: "Nachmeldung", value: true }]}
+            filterMultiple={false}
+            onFilter={(value, record: TeilnehmerIn) => {
+              return record.lateRegistration === value
+            }}
+            render={(_, record)=> {
+              return record.lateRegistration
+                ? <Tag color="orange">Nachmeldung</Tag>
+                : <Tag color="green">Normal</Tag>
+            }} />
           { showDocuments && (
             <Table.Column
               title="Dokumente"
@@ -253,8 +275,8 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe, isSta
           )}
         </Table>
         { isStavo && (
-          <Button>
-            <a href={`/api/${tribe.number}/download`}>Download</a>
+          <Button onClick={() => setShowDownload(true)}>
+            Download
           </Button>
         )}
       </Container>

@@ -40,17 +40,28 @@ const handler: NextApiHandler = async (req, res) => {
     }
   }
 
+  if (req.query.participants !== undefined && req.query.participants !== "all") {
+    query = {
+      ...query,
+      state: {
+        equals: req.query.participants
+      }
+    }
+  }
+  const fields = (req.query.fields as string).split(",")
+
   const participants = await payload.find<TeilnehmerIn>({
     collection: "participants",
     overrideAccess: false,
     user: user,
     where: query,
     limit: 500,
+    sort: "lastName"
   })
 
   res.setHeader('Content-disposition', `attachment; filename=CopacaBeLa-${tribe}.csv`);
   res.setHeader('Content-type', 'application/csv');
-  res.write(CSVCreator(participants.docs));
+  res.write(CSVCreator(participants.docs, fields));
   res.end();
 }
 

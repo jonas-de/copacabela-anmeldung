@@ -10,6 +10,7 @@ export type Gender = Wording
 export type RegistrationState = Wording & { color: string }
 export type InsuranceType = Wording
 export type CovidVaccinationState = Wording
+export type Location = Wording & { color: string }
 
 export type EatingText = "vegetarian" | "vegan" | "meat"
 
@@ -137,6 +138,30 @@ const CovidVaccinationStatesObject: {
   }
 }
 
+export type LocationText = "home" | "onsite" | "offsite"
+
+const LocationObject: {
+  home: Location,
+  onsite: Location,
+  offsite: Location
+} = {
+  home: {
+    slug: "home",
+    name: "Zuhause",
+    color: "default"
+  },
+  onsite: {
+    slug: "onsite",
+    name: "Vor Ort",
+    color: "success"
+  },
+  offsite: {
+    slug: "offsite",
+    name: "Offsite",
+    color: "warning"
+  },
+}
+
 
 export type PhotoPermissionText = "no" | "yes" | "never"
 
@@ -185,8 +210,12 @@ const getPhotopermissionState = (slug: string): Wording => {
   return PhotoPermissionStatesObject[slug as PhotoPermissionText]
 }
 
+const getLocation = (slug: string): Wording => {
+  return LocationObject[slug as LocationText]
+}
+
 export { EatingBehaviours, Genders, RegistrationStates, InsuranceTypes, CovidVaccinationStates,
-  PhotoPermissionStates,
+  PhotoPermissionStates, LocationObject,
   getState, getEatingBehaviour, getGender, getInsuranceType, getCovidVaccinationState,
-  getPhotopermissionState, compareRegistrationStates
+  getPhotopermissionState, compareRegistrationStates, getLocation
 }

@@ -19,9 +19,9 @@ import {
   Vaccinations
 } from './ParticipantsFormComponents';
 import React, { useState } from 'react';
-import { EatingBehaviours } from '../utilitites/Wording';
-import { hasLegalAge, ParticipantRoles } from '../utilitites/Persons';
-import defaultFetch from '../utilitites/defaultFetch';
+import { EatingBehaviours } from '../../../utilitites/Wording';
+import { hasLegalAge, ParticipantRoles } from '../../../utilitites/Persons';
+import defaultFetch from '../../../utilitites/defaultFetch';
 
 const ParticipantsForm: React.FC = () => {
 

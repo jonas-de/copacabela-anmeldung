@@ -1,9 +1,11 @@
 import { GetServerSideUserPropsContext } from '../utilitites/Authentication';
 import React, { useState } from 'react';
-import Header from '../components/Header';
+import Header from '../components/layout/Header';
 import { Container, Row } from 'react-bootstrap';
 import { Button, Form, Input, message } from 'antd';
 import { useRouter } from 'next/router';
+import defaultFetch from '../utilitites/defaultFetch';
+import Page from '../components/layout/Page';
 
 const getServerSideProps = (context: GetServerSideUserPropsContext) => {
   if (context.req.user) {
@@ -26,15 +28,9 @@ const LoginPage: React.FC<{ redirect: string }> = ({ redirect }) => {
     if (values.username === undefined || values.password === undefined) {
       await message.error("Zugangsdaten fehlen")
     } else {
-      const res = await fetch('api/participantscontroller/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: values.username,
+      const res = await defaultFetch("api/participantscontroller/login", "POST", {
+        email: values.username,
           password: values.password,
-        })
       })
       if (res.ok) {
         await router.replace(redirect)
@@ -49,14 +45,8 @@ const LoginPage: React.FC<{ redirect: string }> = ({ redirect }) => {
       await message.error("Gib deine E-Mailadresse an")
       return
     }
-    const res = await fetch("/api/participantscontroller/forgot-password", {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: values.username,
-      }),
+    const res = await defaultFetch("/api/participantscontroller/forgot-password", "POST", {
+      email: values.username,
     })
     if (res.ok) {
       message.info("Eine E-Mail zum Zurücksetzen deines Passworts wurde verschickt")
@@ -117,14 +107,13 @@ const LoginPage: React.FC<{ redirect: string }> = ({ redirect }) => {
     )
 
     return (
-    <>
-      <Header showLogin={false} loggedIn={false} />
+    <Page showLogin={false} loggedIn={false}>
       <Container>
         <Row className="p-4">
           { state == "login" ? <LoginForm/> : <ResetPasswordForm/>}
         </Row>
       </Container>
-    </>
+    </Page>
   )
 }
 

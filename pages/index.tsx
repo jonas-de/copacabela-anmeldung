@@ -1,9 +1,7 @@
 import React from 'react';
 import { Container, Row as BSRow } from 'react-bootstrap';
-import Header from '../components/Header';
 import { GetServerSideUserPropsContext } from '../utilitites/Authentication';
-import ParticipantsForm from '../components/ParticipantsForm';
-import Page from '../components/navigation/Page';
+import Page from '../components/layout/Page';
 import Closed from '../components/RegistrationClosed';
 
 const getServerSideProps = (context: GetServerSideUserPropsContext) => {

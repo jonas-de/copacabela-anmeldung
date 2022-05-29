@@ -3,14 +3,13 @@ import { Button, DatePicker, Form, Input, message, Radio } from 'antd';
 import deDE from 'antd/lib/date-picker/locale/de_DE';
 import { Rule } from 'rc-field-form/es/interface';
 import moment from 'moment';
-import defaultFetch from '../utilitites/defaultFetch';
-import { TeilnehmerIn } from '../payload-types';
-import { useRouter } from 'next/router';
+import defaultFetch from '../../utilitites/defaultFetch';
+import { TeilnehmerIn } from '../../payload-types';
 
 const BevoConfirmations: React.FC<{ participant: TeilnehmerIn }> = ({ participant }) => {
 
   const boolRules: Rule[] = [{ type: "boolean", required: true }]
-  const defaultWidth: { width: number } = { width: 240}
+  const defaultWidth: { width: number } = { width: 240 }
 
 
   const onSubmit = async (values: any) => {

@@ -10,9 +10,9 @@ import {
 import payload from 'payload';
 import { TeilnehmendenverwalterIn } from '../../payload-types';
 import { Where } from 'payload/types';
-import Page from '../../components/navigation/Page';
+import Page from '../../components/layout/Page';
 import { Container } from 'react-bootstrap';
-import ImageHead from '../../components/ImageHead';
+import ImageHead from '../../components/layout/ImageHead';
 import { Button, Col, message, Row, Table, Tag } from 'antd';
 import { AccessLevels, getAccessLevel } from '../../utilitites/Levels';
 import { canCreate, isBevo } from '../../collections/ParticipantsController';

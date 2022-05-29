@@ -5,7 +5,7 @@ import {
 } from '../utilitites/Tribes';
 import payload from 'payload';
 import { TeilnehmerIn } from '../payload-types';
-import Page from '../components/navigation/Page';
+import Page from '../components/layout/Page';
 import React from 'react';
 import { Container } from 'react-bootstrap';
 import { Table } from 'antd';

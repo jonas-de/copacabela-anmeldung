@@ -20,12 +20,12 @@ import {
   Vaccinations
 } from './ParticipantsFormComponents';
 import React, { useState } from 'react';
-import { hasLegalAge, ParticipantRoleText } from '../utilitites/Persons';
-import { TeilnehmerIn } from '../payload-types';
+import { hasLegalAge, ParticipantRoleText } from '../../../utilitites/Persons';
+import { TeilnehmerIn } from '../../../payload-types';
 import moment from 'moment';
-import defaultFetch from '../utilitites/defaultFetch';
+import defaultFetch from '../../../utilitites/defaultFetch';
 import { useRouter } from 'next/router';
-import { dateSelectionToObject } from '../utilitites/Fees';
+import { dateSelectionToObject } from '../../../utilitites/Fees';
 
 const EditParticipantsForm: React.FC<{ participant: TeilnehmerIn, onCancel: VoidFunction }> = ({ participant, onCancel }) => {
 
@@ -49,10 +49,14 @@ const EditParticipantsForm: React.FC<{ participant: TeilnehmerIn, onCancel: Void
 
     console.log(values);
 
-    if (role !== "participant" && !hasLegalAge(values.birthDate)) {
+    /* * *
+     * Allow helpers to be underage
+     * * *
+      if (role !== "participant" && !hasLegalAge(values.birthDate)) {
       message.error("Als Leiter- oder Helfer:in musst du min. 18 Jahre alt sein.")
       return
     }
+    */
 
     const res = await defaultFetch(`/api/participants/${participant.id}`, "PUT", {
       ...values,

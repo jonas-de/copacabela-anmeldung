@@ -1,4 +1,4 @@
-const defaultFetch = (info: RequestInfo, method: string, body: object): Promise<Response> => {
+const defaultFetch = (info: RequestInfo, method: string, body: object | undefined): Promise<Response> => {
   return fetch(info, {
     method,
     credentials: "include",

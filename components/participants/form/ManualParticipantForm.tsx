@@ -1,7 +1,7 @@
 import { ColProps, Form, message, Modal } from 'antd';
 import React, { useState } from 'react';
-import { hasLegalAge, ParticipantRoles } from '../utilitites/Persons';
-import { EatingBehaviours } from '../utilitites/Wording';
+import { hasLegalAge, ParticipantRoles } from '../../../utilitites/Persons';
+import { EatingBehaviours } from '../../../utilitites/Wording';
 import {
   Address,
   Comments,

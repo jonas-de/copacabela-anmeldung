@@ -1,9 +1,9 @@
 import { Button, Checkbox, Col, Form, message, Popconfirm, Row } from 'antd';
 import React, { useState } from 'react';
 import { useForm } from 'antd/lib/form/Form';
-import { TeilnehmerIn } from '../payload-types';
-import { PhotoPermissionText } from '../utilitites/Wording';
-import defaultFetch from '../utilitites/defaultFetch';
+import { TeilnehmerIn } from '../../payload-types';
+import { PhotoPermissionText } from '../../utilitites/Wording';
+import defaultFetch from '../../utilitites/defaultFetch';
 import { useRouter } from 'next/router';
 
 const ConfirmOrderButton: React.FC<{

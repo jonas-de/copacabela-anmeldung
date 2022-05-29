@@ -18,14 +18,14 @@ import {
   EatingBehaviours,
   Genders,
   InsuranceTypes
-} from '../utilitites/Wording';
+} from '../../../utilitites/Wording';
 import {
   District,
   getTribeForNumber, TribesWithDistrict
-} from '../utilitites/Tribes';
-import Levels, { LevelsWithNone } from '../utilitites/Levels';
+} from '../../../utilitites/Tribes';
+import Levels, { LevelsWithNone } from '../../../utilitites/Levels';
 import { CloseOutlined, EnterOutlined } from '@ant-design/icons';
-import { ParticipantRoles } from '../utilitites/Persons';
+import { ParticipantRoles } from '../../../utilitites/Persons';
 import { StoreValue } from 'rc-field-form/lib/interface';
 import { FormInstance } from 'antd/es/form/Form';
 import { ShouldUpdate } from 'rc-field-form/es/Field';
@@ -33,7 +33,7 @@ import deDE from 'antd/lib/date-picker/locale/de_DE';
 import 'moment/locale/de';
 import { Rule } from 'rc-field-form/es/interface';
 import Image from 'next/image';
-import { dateArray } from '../utilitites/Fees';
+import { dateArray } from '../../../utilitites/Fees';
 
 const defaultRules: Rule[] = [{ type: "string", required: true }]
 const layoutNoLabel: ColProps = { offset: 8, span: 16 }
@@ -109,7 +109,7 @@ const Membership: React.FC<{ tribe?: number, role: string}> = ({ tribe, role }) 
         <Select.Option value={tribeObject.number} key={tribeObject.number}>
           <div style={{ alignItems: "center"}}>
             <Image className="pe-2" src={`/images/${tribeObject.image}`} width={35} height={32} alt={tribeObject.name}/>
-            { District.name }
+            { tribeObject.name }
           </div>
         </Select.Option>
       )]

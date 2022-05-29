@@ -4,19 +4,19 @@ import payload from 'payload';
 import { TeilnehmerIn } from '../../payload-types';
 import { Button, Divider, message } from 'antd';
 import { Container } from 'react-bootstrap';
-import Page from '../../components/navigation/Page';
+import Page from '../../components/layout/Page';
 import { getTribeForNumber, Tribe } from '../../utilitites/Tribes';
-import ParticipantData from '../../components/ParticipantData';
+import ParticipantData from '../../components/participants/ParticipantData';
 import ParticipantConfirmations, {
   ConfirmOrderButton
-} from '../../components/ParticipantConfirmations';
+} from '../../components/participants/ParticipantConfirmations';
 import { CloseOutlined, EditOutlined, RedoOutlined } from '@ant-design/icons';
-import EditParticipantsForm from '../../components/EditParticipantForm';
+import EditParticipantsForm from '../../components/participants/form/EditParticipantForm';
 import { StateText } from '../../utilitites/Wording';
 import defaultFetch from '../../utilitites/defaultFetch';
 import { useRouter } from 'next/router';
-import ImageHead from '../../components/ImageHead';
-import BevoConfirmations from '../../components/BevoConfirmations';
+import ImageHead from '../../components/layout/ImageHead';
+import BevoConfirmations from '../../components/participants/BevoConfirmations';
 
 const getServerSideProps = withUser(async (context: GetServerSideUserPropsContext) => {
 

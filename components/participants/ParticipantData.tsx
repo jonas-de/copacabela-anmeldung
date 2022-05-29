@@ -1,19 +1,19 @@
 import React from 'react';
-import { TeilnehmerIn } from '../payload-types';
+import { TeilnehmerIn } from '../../payload-types';
 import { Descriptions, Table, Tag } from 'antd';
-import { Tribe } from '../utilitites/Tribes';
+import { Tribe } from '../../utilitites/Tribes';
 import moment from 'moment';
-import { getRoleName, hasLegalAge } from '../utilitites/Persons';
+import { getRoleName, hasLegalAge } from '../../utilitites/Persons';
 import {
   getCovidVaccinationState,
   getEatingBehaviour,
   getGender,
   getInsuranceType,
   getState
-} from '../utilitites/Wording';
-import { getLevelWithNone } from '../utilitites/Levels';
+} from '../../utilitites/Wording';
+import { getLevelWithNone } from '../../utilitites/Levels';
 import Image from 'next/image';
-import { dateObjectToText } from '../utilitites/Fees';
+import { dateObjectToText } from '../../utilitites/Fees';
 
 export type ShowParticipantProps = {
   extra: React.ReactNode
@@ -42,6 +42,9 @@ const ParticipantData: React.FC<ShowParticipantProps> = ({ extra, participant, t
       <Descriptions.Item label="Rolle & Status">
         {getRoleName(participant.role)}
         <Tag style={{ marginLeft: 16 }} color={state.color}>{state.name}</Tag>
+        <Tag style={{ marginLeft: 8 }} color={participant.lateRegistration ? "orange" : "green"}>
+          {participant.lateRegistration ? "Nachmeldung" : "Normale Buchung"}
+        </Tag>
       </Descriptions.Item>
       <Descriptions.Item label="Vorname">{participant.firstName}</Descriptions.Item>
       <Descriptions.Item label="Nachname">{participant.lastName}</Descriptions.Item>

@@ -4,7 +4,7 @@ import {
   CovidVaccinationStates,
   EatingBehaviours,
   Genders,
-  InsuranceTypes,
+  InsuranceTypes, LocationObject,
   PhotoPermissionStates,
   RegistrationStates
 } from '../utilitites/Wording';
@@ -16,7 +16,6 @@ import { ParticipantRoles } from '../utilitites/Persons';
 import payload from 'payload';
 import sendRegistrationMail from '../utilitites/sendRegistrationMail';
 import { dateArray } from '../utilitites/Fees';
-import { AfterChangeHook } from 'payload/dist/collections/config/types';
 import { BeforeChangeHook } from 'payload/dist/globals/config/types';
 import moment from 'moment-timezone';
 
@@ -46,6 +45,10 @@ const ParticipantsAccess: Access = ({ req: { user } }: { req: { user: Participan
 
 const BevoOnlyAccess: FieldAccess = ({ req: { user } }: { req: { user: ParticipantsControllerUser }}): boolean => {
   return user && (user.collection === "users" || isBevo(user as TeilnehmendenverwalterIn))
+}
+
+const AdminAccess: Access = ({ req: { user } }: { req: { user: ParticipantsControllerUser }}):boolean => {
+  return user && user.collection === "users"
 }
 
 const Role: Field = {
@@ -513,6 +516,18 @@ const LateRegistration: Field = {
   type: "checkbox",
   label: "Nachmeldung",
 }
+/*
+const Location: Field = {
+  name: "location",
+  type: "select",
+  options: Object.values(LocationObject).map(location => { return {
+    value: location.slug,
+    label: location.name
+  }}),
+  label: "Wo ist",
+  required: true,
+}
+*/
 
 const participantFields: Field[] = [
   Role,
@@ -552,7 +567,7 @@ const participantFields: Field[] = [
   Review,
   State,
   CancelledAt,
-  // LateRegistration,
+  LateRegistration,
 ]
 
 // @ts-ignore
@@ -579,16 +594,15 @@ const Participants: CollectionConfig = {
     defaultColumns: ["firstName", "lastName", "tribe", "level", "state"]
   },
   access: {
-    create: () => false,
+    create: AdminAccess,
     read: ParticipantsAccess,
     update: ParticipantsAccess,
     delete: ParticipantsAccess,
   },
   hooks: {
     beforeValidate: [
-      async ({ data, req, operation }) => {
+      async ({ data, operation }) => {
         if (operation !== "create") {
-          console.log(data);
           return data
         }
         const participant = data as TeilnehmerIn
@@ -642,7 +656,9 @@ const Participants: CollectionConfig = {
             juleica: false,
             clearance: false
           },
-          state: "new"
+          // for late registrations only
+          state: "confirmed",
+          lateRegistration: true
         }
       },
       setCancelled
