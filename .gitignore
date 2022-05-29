@@ -1,6 +1,7 @@
 node_modules
 .next
 .env.develop
+.env.dev
 .env.server
 .env.build
 .env
