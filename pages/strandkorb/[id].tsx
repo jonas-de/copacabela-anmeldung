@@ -18,6 +18,7 @@ import { Button, Col, List, message, Row, Space, Tag } from 'antd';
 import { EuroOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import defaultFetch from '../../utilitites/defaultFetch';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 const getServerSideProps = withUser( async (context: GetServerSideUserPropsContext) => {
 
@@ -42,7 +43,7 @@ const getServerSideProps = withUser( async (context: GetServerSideUserPropsConte
       id: participant.id,
       tribe: getTribeForNumber(Number(participant.tribe)),
       firstName: participant.firstName,
-      role: getRoleName(participant.role),
+      role: participant.role,
       level: getLevelWithNone(participant.level),
       credit: participant.strandkorbCredit,
       strandkorbItems: items.docs,
@@ -110,8 +111,18 @@ const StrandkorbPayment: React.FC<{
     <Page level={accessLevel} showLogin={true}>
       <Container className="pt-4 pb-4">
         <ImageHead image={tribe.image} text={firstName}>
-          <Tag style={{ marginTop: 16 }} color={level.color}>{level.singular}</Tag>
-          <span style={{ color: "gray" }}>{tribe.name}</span>
+          <>
+            { role === "leader" && (
+              <Image src="/images/Dpsg.png" width={16} height={16} alt={"Leiter:in"} />
+            )}
+            { role !== "helper" && (
+              <Tag style={{ marginTop: 16, marginLeft: 8 }} color={level.color}>{level.singular}</Tag>
+            )}
+            { role === "helper" && (
+              <Tag style={{ marginTop: 16 }} color="gray">Helfer:in</Tag>
+            )}
+            <span style={{ color: "gray" }}>{tribe.name}</span>
+          </>
         </ImageHead>
         <Row>
           <Col>

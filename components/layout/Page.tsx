@@ -7,7 +7,7 @@ import { AccessLevelText } from '../../utilitites/Levels';
 export type PageProps = {
   level: AccessLevelText | "noUser"
   showLogin?: boolean
-  loggedIn?: boolean
+  children?: React.ReactNode
 }
 
 const Page: React.FC<PageProps> = ({ level, showLogin= true, children }) => (

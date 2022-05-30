@@ -4,6 +4,7 @@ import { AdminAccess } from './Participants';
 import payload from 'payload';
 import { Strandkorbartikel, Strandkorbtransaktion, TeilnehmerIn } from '../payload-types';
 import { APIError } from 'payload/errors';
+import { getState } from '../utilitites/Wording';
 
 const StrandkorbTransactions: CollectionConfig = {
   slug: "strandkorb-transactions",
@@ -38,11 +39,14 @@ const StrandkorbTransactions: CollectionConfig = {
           return data
         }
 
-
         const participant = await payload.findByID<TeilnehmerIn>({
           collection: "participants",
-          id: data!.participant
+          id: data!.participant,
         })
+
+        if (participant.state !== "confirmed") {
+          throw new APIError(`Ungültiger TN-Status (${getState(participant.state).name})`)
+        }
 
         // check items amount & that there is enough money, then update balance
         const items = await payload.find<Strandkorbartikel>({
