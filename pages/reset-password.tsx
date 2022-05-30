@@ -5,6 +5,7 @@ import { Container, Row } from 'react-bootstrap';
 import { Button, Form, Input, message } from 'antd';
 import { useRouter } from 'next/router';
 import defaultFetch from '../utilitites/defaultFetch';
+import Page from '../components/layout/Page';
 
 const getServerSideProps = (context: GetServerSideUserPropsContext) => {
   if (context.req.user || !context.query.token) {
@@ -59,14 +60,13 @@ const ResetPWPage: React.FC<{ token: string }> = ({ token }) => {
   )
 
   return (
-    <>
-      <Header showLogin={false} loggedIn={false} />
+    <Page showLogin={false} level="noUser">
       <Container>
         <Row className="p-4">
           <ResetPasswordForm />
         </Row>
       </Container>
-    </>
+    </Page>
   )
 }
 

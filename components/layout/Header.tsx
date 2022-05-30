@@ -3,13 +3,14 @@ import React from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { AccessLevelText } from '../../utilitites/Levels';
 
 export type HeaderProps = {
+  level: AccessLevelText | "noUser"
   showLogin: boolean
-  loggedIn: boolean
 }
 
-const Header: React.FC<HeaderProps> = ({ showLogin, loggedIn = false }: HeaderProps) => {
+const Header: React.FC<HeaderProps> = ({ level, showLogin }: HeaderProps) => {
   const router = useRouter()
   return (
     <Navbar
@@ -31,18 +32,31 @@ const Header: React.FC<HeaderProps> = ({ showLogin, loggedIn = false }: HeaderPr
         </Link>
         <Navbar.Toggle/>
         <Container as={Navbar.Collapse}>
-          { loggedIn && (
+          { level !== "noUser" && (
             <Nav>
-              <Nav.Link href="/participants">Übersicht</Nav.Link>
-              <Nav.Link href="/participants/config">Einstellungen</Nav.Link>
+              { level !== "kitchen" && level !== "strandkorb" && (
+                <Nav.Link href="/participants">Übersicht</Nav.Link>
+                )}
+              { (level === "all" || level === "bevo") && (
+                <Nav.Link href="/participants/config">Einstellungen</Nav.Link>
+              )}
+              { (level === "bevo" || level === "kitchen") && (
+                <Nav.Link href="/food">Essverhalten</Nav.Link>
+              )}
+              { level === "bevo" && (
+                <Nav.Link href="/stats">Statistik</Nav.Link>
+              )}
+              { (level === "bevo" || level === "strandkorb") && (
+                <Nav.Link href="/strandkorb">Strandkorb</Nav.Link>
+              )}
             </Nav>
           )}
           { showLogin && (
             <Button
-              variant={ loggedIn ? "outline-light" : "primary" }
+              variant={ level !== "noUser" ? "outline-light" : "primary" }
               style={{ marginLeft: "auto" }}
               onClick={async () => {
-                if (loggedIn) {
+                if (level !== "noUser") {
                   await fetch("/api/participantscontroller/logout", {
                     method: "POST",
                     credentials: "include"
@@ -53,7 +67,7 @@ const Header: React.FC<HeaderProps> = ({ showLogin, loggedIn = false }: HeaderPr
                 }
               }}
             >
-              { loggedIn ? "Logout" : "Login" }
+              { level !== "noUser" ? "Logout" : "Login" }
             </Button>
           )}
         </Container>

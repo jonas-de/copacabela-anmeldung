@@ -1,4 +1,4 @@
-import { TeilnehmerIn } from '../payload-types';
+import { TeilnehmendenverwalterIn, TeilnehmerIn } from '../payload-types';
 import { compareRoles } from './Persons';
 
 export interface Level {
@@ -9,6 +9,7 @@ export interface Level {
   image: string
 }
 export type LevelText = "woelflinge" | "jupfis" | "pfadis" | "rover"
+export type AccessLevelText = LevelText | "all" | "kitchen" | "strandkorb" | "bevo"
 export type Levels = { woelflinge: Level, jupfis: Level, pfadis: Level, rover: Level }
 const LevelsObject: Levels = {
   woelflinge: {
@@ -59,10 +60,19 @@ const AccessKitchen: Level = {
   image: "Dpsg.png"
 }
 
+const AccessStrandkorb: Level = {
+  slug: "strandkorb",
+  singular: "Strandkorb",
+  plural: "Strandkorb",
+  color: "magenta",
+  image: "Dpsg.png"
+}
+
 
 const AccessLevels: Level[] = Levels
   .concat(AccessAll)
   .concat(AccessKitchen)
+  .concat(AccessStrandkorb)
 
 const None: Level = {
   slug: "none",
@@ -79,7 +89,7 @@ const isValidLevel = (level: string): boolean => {
 }
 
 const isValidAccessLevel = (level: string): boolean => {
-  return level === "all" || level === "kitchen" || isValidLevel(level)
+  return level === "all" || level === "kitchen" || level === "strandkorb" || isValidLevel(level)
 }
 
 const isValidLevelWithNone = (level: string): boolean => {
@@ -97,7 +107,18 @@ const getAccessLevel = (slug: string): Level => {
   if (slug === "kitchen") {
     return AccessKitchen
   }
+
+  if (slug === "strandkorb") {
+    return AccessStrandkorb
+  }
   return getLevel(slug)
+}
+
+const getAccessLevelForHeader = (user: TeilnehmendenverwalterIn): AccessLevelText => {
+  if (user.tribe === "1312" && user.level === "all") {
+    return "bevo"
+  }
+  return user.level
 }
 
 const getLevelWithNone = (slug: string): Level => {
@@ -127,6 +148,6 @@ const compareLevelsWithRole = (a: TeilnehmerIn, b: TeilnehmerIn): number => {
 }
 
 export default Levels
-export { AccessLevels, LevelsWithNone, AccessKitchen, AccessAll, isValidLevel, isValidAccessLevel, isValidLevelWithNone,
-  getLevel, getAccessLevel, getLevelWithNone, compareLevelsWithRole
+export { AccessLevels, LevelsWithNone, AccessKitchen, AccessStrandkorb, AccessAll, isValidLevel, isValidAccessLevel, isValidLevelWithNone,
+  getLevel, getAccessLevel, getLevelWithNone, compareLevelsWithRole, getAccessLevelForHeader
 }

@@ -12,7 +12,11 @@ import { TeilnehmerIn } from '../../payload-types';
 import Page from '../../components/layout/Page';
 import { Container } from 'react-bootstrap';
 import { Button, Col, message, Row, Switch, Table, Tag } from 'antd';
-import Levels, { compareLevelsWithRole, getLevelWithNone } from '../../utilitites/Levels';
+import Levels, {
+  AccessLevelText,
+  compareLevelsWithRole, getAccessLevelForHeader,
+  getLevelWithNone
+} from '../../utilitites/Levels';
 import { compareRegistrationStates, getState, RegistrationStates } from '../../utilitites/Wording';
 import Image from 'next/image';
 import { Where } from 'payload/types';
@@ -57,11 +61,11 @@ const getServerSideProps = withUser( async (context: GetServerSideUserPropsConte
   return { props: {
     participants: participants.docs,
     tribe: getTribeForNumber(tribe),
-      isStavo: context.req.user.level === "all"
+    accessLevel: getAccessLevelForHeader(context.req.user),
   }}
 })
 
-const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe, isStavo: boolean }> = ({ participants, tribe, isStavo }) => {
+const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe, accessLevel: AccessLevelText }> = ({ participants, tribe, accessLevel }) => {
 
   /*
   const [showNew, setShowNew] = useState(false)
@@ -83,7 +87,7 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe, isSta
   const [showComments, setShowComments] = useState(false)
 
   return (
-    <Page showLogin={true} loggedIn={true}>
+    <Page level={accessLevel} showLogin={true}>
       <Container fluid="md" className="ps-0 pe-0">
         { /*
           <ManualParticipantForm
@@ -274,7 +278,7 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe, isSta
           />
           )}
         </Table>
-        { isStavo && (
+        { accessLevel === "all" && (
           <Button onClick={() => setShowDownload(true)}>
             Download
           </Button>

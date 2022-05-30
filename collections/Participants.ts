@@ -23,7 +23,9 @@ const ParticipantsQuery = (user: ParticipantsControllerUser) => {
   if (user.collection == "users") {
     return true
   }
+
   const participantController = user as TeilnehmendenverwalterIn
+
   const query: Where = {}
   if (participantController.tribe !== "1312") {
     query.tribe = {
@@ -35,7 +37,7 @@ const ParticipantsQuery = (user: ParticipantsControllerUser) => {
       equals: participantController.level
     }
   }
-  if (participantController.level === "kitchen") {
+  if (participantController.level === "kitchen" || participantController.level === "strandkorb") {
     return false
   }
   return query
@@ -43,7 +45,11 @@ const ParticipantsQuery = (user: ParticipantsControllerUser) => {
 
 const ParticipantsAccess: Access = ({ req: { user } }: { req: { user: ParticipantsControllerUser }}) => ParticipantsQuery(user)
 
-const BevoOnlyAccess: FieldAccess = ({ req: { user } }: { req: { user: ParticipantsControllerUser }}): boolean => {
+const BevoOnlyFieldAccess: FieldAccess = ({ req: { user } }: { req: { user: ParticipantsControllerUser }}): boolean => {
+  return user && (user.collection === "users" || isBevo(user as TeilnehmendenverwalterIn))
+}
+
+const BevoOnlyAccess: Access = ({ req: { user } }: { req: { user: ParticipantsControllerUser }}): boolean => {
   return user && (user.collection === "users" || isBevo(user as TeilnehmendenverwalterIn))
 }
 
@@ -499,8 +505,8 @@ const Review: Field = {
   label: "Überprüfung",
   required: true,
   access: {
-    read: BevoOnlyAccess,
-    update: BevoOnlyAccess
+    read: BevoOnlyFieldAccess,
+    update: BevoOnlyFieldAccess
   }
 }
 
@@ -516,6 +522,16 @@ const LateRegistration: Field = {
   type: "checkbox",
   label: "Nachmeldung",
 }
+
+const StrandkorbCredit: Field = {
+  name: "strandkorbCredit",
+  type: "number",
+  min: 0,
+  max: 10,
+  label: "Strandkorbguthaben",
+  required: true
+}
+
 /*
 const Location: Field = {
   name: "location",
@@ -568,6 +584,7 @@ const participantFields: Field[] = [
   State,
   CancelledAt,
   LateRegistration,
+  StrandkorbCredit
 ]
 
 // @ts-ignore
@@ -618,7 +635,8 @@ const Participants: CollectionConfig = {
             juleica: false,
             clearance: false
           },
-          presence: Object.fromEntries(dateArray.map(date => [String(date), true]))
+          presence: Object.fromEntries(dateArray.map(date => [String(date), true])),
+          strandkorbCredit: 10,
         }
       }
     ],
@@ -658,7 +676,8 @@ const Participants: CollectionConfig = {
           },
           // for late registrations only
           state: "confirmed",
-          lateRegistration: true
+          lateRegistration: true,
+          strandkorbCredit: 10,
         }
       },
       setCancelled
@@ -670,7 +689,7 @@ const Participants: CollectionConfig = {
 }
 
 export default Participants
-
+export { AdminAccess }
 
 
 

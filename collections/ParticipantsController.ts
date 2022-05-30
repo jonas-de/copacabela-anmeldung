@@ -14,6 +14,10 @@ const isBevo = (user: TeilnehmendenverwalterIn): boolean => {
   return user.tribe === "1312" && user.level === "all"
 }
 
+const isStrandkorb = (user: TeilnehmendenverwalterIn): boolean => {
+  return user.tribe === "1312" && user.level === "strandkorb"
+}
+
 const isStavo = (user: TeilnehmendenverwalterIn): boolean => {
   return user.tribe !== "1312" && user.level === "all"
 }
@@ -228,4 +232,4 @@ const ParticipantsController: CollectionConfig = {
 }
 
 export default ParticipantsController
-export { canCreate, isBevo }
+export { canCreate, isBevo, isStrandkorb }

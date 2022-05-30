@@ -9,7 +9,7 @@ import Page from '../components/layout/Page';
 import React from 'react';
 import { Container } from 'react-bootstrap';
 import { List, Table } from 'antd';
-import { getLevel } from '../utilitites/Levels';
+import { AccessLevelText, getAccessLevelForHeader, getLevel } from '../utilitites/Levels';
 
 type LevelStats = {
   name: string,
@@ -71,13 +71,14 @@ const getServerSideProps = withUser( async (context: GetServerSideUserPropsConte
   }, stats)
 
   return { props: {
-      stats: accumulatedStats
+      stats: accumulatedStats,
+      accessLevel: getAccessLevelForHeader(context.req.user),
     }}
 })
 
-const Statistics: React.FC<{ stats: Stats }> = ({ stats }) => {
+const Statistics: React.FC<{ stats: Stats, accessLevel: AccessLevelText }> = ({ stats, accessLevel }) => {
   return (
-    <Page showLogin={true} loggedIn={true}>
+    <Page level={accessLevel} showLogin={true}>
       <Container fluid="md" className="ps-0 pe-0">
         <h1 className="pt-2"><strong>Essverhalten</strong></h1>
         <div className="pt-2 pb-2">{stats.count} Teilnehmende</div>

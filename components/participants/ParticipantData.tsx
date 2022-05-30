@@ -48,6 +48,7 @@ const ParticipantData: React.FC<ShowParticipantProps> = ({ extra, participant, t
       </Descriptions.Item>
       <Descriptions.Item label="Vorname">{participant.firstName}</Descriptions.Item>
       <Descriptions.Item label="Nachname">{participant.lastName}</Descriptions.Item>
+      <Descriptions.Item label="Bestellnummer">{participant.orderId}</Descriptions.Item>
       <Descriptions.Item label="Geburtsdatum">{
         moment(participant.birthDate)
           .format("DD.MM.YYYY")

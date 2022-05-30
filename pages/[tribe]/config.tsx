@@ -14,7 +14,12 @@ import Page from '../../components/layout/Page';
 import { Container } from 'react-bootstrap';
 import ImageHead from '../../components/layout/ImageHead';
 import { Button, Col, message, Row, Table, Tag } from 'antd';
-import { AccessLevels, getAccessLevel } from '../../utilitites/Levels';
+import {
+  AccessLevels,
+  AccessLevelText,
+  getAccessLevel,
+  getAccessLevelForHeader
+} from '../../utilitites/Levels';
 import { canCreate, isBevo } from '../../collections/ParticipantsController';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import CreateParticipantController from '../../components/CreateParticipantController';
@@ -46,14 +51,14 @@ const getServerSideProps = withUser(async (context: GetServerSideUserPropsContex
   return {
     props: {
       canCreate: canCreate(context.req.user),
-      isBevo: isBevo(context.req.user),
+      accessLevel: getAccessLevelForHeader(context.req.user),
       tribe: getTribeForNumber(tribe),
       controller: controller.docs
     }
   }
 })
 
-const Config: React.FC<{ tribe: Tribe, controller: TeilnehmendenverwalterIn[], canCreate: boolean, isBevo: boolean }> = ({ tribe, controller, canCreate, isBevo }) => {
+const Config: React.FC<{ tribe: Tribe, controller: TeilnehmendenverwalterIn[], canCreate: boolean, accessLevel: AccessLevelText }> = ({ tribe, controller, canCreate, accessLevel }) => {
 
   const router = useRouter()
   const [showNew, setShowNew] = useState(false)
@@ -76,7 +81,7 @@ const Config: React.FC<{ tribe: Tribe, controller: TeilnehmendenverwalterIn[], c
   }
 
   return (
-    <Page showLogin={true} loggedIn={true}>
+    <Page level={accessLevel} showLogin={true}>
       <Container fluid="md" className="ps-0 pe-0">
         <CreateParticipantController userTribe={tribe} visible={showNew} complete={submit} cancel={() => setShowNew(false)} />
         <Table

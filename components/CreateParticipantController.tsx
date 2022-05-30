@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'antd/lib/form/Form';
 import { Form, Input, Modal, Select } from 'antd';
 import { Tribe, TribesWithDistrict } from '../utilitites/Tribes';
-import Levels, { AccessAll, AccessKitchen } from '../utilitites/Levels';
+import Levels, { AccessAll, AccessKitchen, AccessStrandkorb } from '../utilitites/Levels';
 
 const CreateParticipantController: React.FC<{
   userTribe: Tribe,
@@ -22,7 +22,7 @@ const CreateParticipantController: React.FC<{
 
   const LevelOptions: () => React.ReactElement[] = () => {
     if (userTribe.number === 1312 && tribe === 1312) {
-      return Levels.concat(AccessKitchen).map(level => (
+      return Levels.concat(AccessKitchen).concat(AccessStrandkorb).map(level => (
         <Select.Option key={level.slug} value={level.slug}>{level.plural}</Select.Option>
       ))
     }

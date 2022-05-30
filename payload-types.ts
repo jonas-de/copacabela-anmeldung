@@ -8,14 +8,6 @@
 export interface Config {}
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "settings".
- */
-export interface Einstellungen {
-  id: string;
-  lateRegistration: boolean;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "participantscontroller".
  */
 export interface TeilnehmendenverwalterIn {
@@ -38,7 +30,7 @@ export interface TeilnehmendenverwalterIn {
     | '131212'
     | '131213'
     | '1312';
-  level: 'woelflinge' | 'jupfis' | 'pfadis' | 'rover' | 'all' | 'kitchen';
+  level: 'woelflinge' | 'jupfis' | 'pfadis' | 'rover' | 'all' | 'kitchen' | 'strandkorb';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -126,6 +118,25 @@ export interface TeilnehmerIn {
   state: 'new' | 'confirmed' | 'cancelled';
   cancelledAt?: string;
   lateRegistration?: boolean;
+  strandkorbCredit: number;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "strandkorb-items".
+ */
+export interface Strandkorbartikel {
+  id: string;
+  name: string;
+  price: number;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "strandkorb-transactions".
+ */
+export interface Strandkorbtransaktion {
+  id: string;
+  participant: string | TeilnehmerIn;
+  amount: number;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

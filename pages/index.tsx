@@ -3,19 +3,20 @@ import { Container, Row as BSRow } from 'react-bootstrap';
 import { GetServerSideUserPropsContext } from '../utilitites/Authentication';
 import Page from '../components/layout/Page';
 import Closed from '../components/RegistrationClosed';
+import { AccessLevelText, getAccessLevelForHeader } from '../utilitites/Levels';
 
 const getServerSideProps = (context: GetServerSideUserPropsContext) => {
   return {
     props: {
-      loggedIn: context.req.user !== undefined
+      accessLevel: context.req.user !== undefined ? getAccessLevelForHeader(context.req.user) : "noUser"
     }
   }
 }
 
 // @ts-ignore
-const page: React.FC = ({ loggedIn }) => {
+const page: React.FC<{ accessLevel: AccessLevelText | "noUser"}> = ({ accessLevel }) => {
   return (
-    <Page loggedIn={loggedIn} showLogin={true}>
+    <Page level={accessLevel} showLogin={true}>
       <Container className="pt-4 pb-4">
         <BSRow className="text-center">
           <h2>Anmeldung zum CopacaBeLa</h2>

@@ -10,6 +10,7 @@ import React from 'react';
 import { Container } from 'react-bootstrap';
 import { Table } from 'antd';
 import StatsTable from '../components/StatsTable';
+import { AccessLevelText, getAccessLevelForHeader } from '../utilitites/Levels';
 
 type Stats = {
   name: string,
@@ -88,13 +89,14 @@ const getServerSideProps = withUser( async (context: GetServerSideUserPropsConte
   }, stats)
 
   return { props: {
-      stats: accumulatedStats
+      stats: accumulatedStats,
+      accessLevel: getAccessLevelForHeader(context.req.user),
     }}
 })
 
-const Statistics: React.FC<{ stats: AllStats }> = ({ stats }) => {
+const Statistics: React.FC<{ stats: AllStats, accessLevel: AccessLevelText }> = ({ stats, accessLevel }) => {
   return (
-    <Page showLogin={true} loggedIn={true}>
+    <Page showLogin={true} level={accessLevel}>
       <Container fluid="md" className="ps-0 pe-0">
         <StatsTable title="Statistiken" stats={stats} />
         <div className="pt-4 pb-4">

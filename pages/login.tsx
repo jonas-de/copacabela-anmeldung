@@ -107,7 +107,7 @@ const LoginPage: React.FC<{ redirect: string }> = ({ redirect }) => {
     )
 
     return (
-    <Page showLogin={false} loggedIn={false}>
+    <Page showLogin={false} level="noUser">
       <Container>
         <Row className="p-4">
           { state == "login" ? <LoginForm/> : <ResetPasswordForm/>}

@@ -17,6 +17,7 @@ import defaultFetch from '../../utilitites/defaultFetch';
 import { useRouter } from 'next/router';
 import ImageHead from '../../components/layout/ImageHead';
 import BevoConfirmations from '../../components/participants/BevoConfirmations';
+import { AccessLevelText, getAccessLevelForHeader } from '../../utilitites/Levels';
 
 const getServerSideProps = withUser(async (context: GetServerSideUserPropsContext) => {
 
@@ -32,7 +33,7 @@ const getServerSideProps = withUser(async (context: GetServerSideUserPropsContex
       props: {
         participant,
         tribe: getTribeForNumber(Number(participant.tribe)),
-        isBevo: context.req.user.tribe === "1312" && context.req.user.level === "all"
+        accessLevel: getAccessLevelForHeader(context.req.user),
       }
     }
   } catch {}
@@ -45,8 +46,8 @@ const getServerSideProps = withUser(async (context: GetServerSideUserPropsContex
 const Participants: React.FC<{
   participant: TeilnehmerIn,
   tribe: Tribe,
-  isBevo: boolean
-}> = ({ participant, tribe, isBevo }) => {
+  accessLevel: AccessLevelText,
+}> = ({ participant, tribe, accessLevel }) => {
 
   const router = useRouter()
   const [showEdit, setShowEdit] = useState(false)
@@ -98,8 +99,8 @@ const Participants: React.FC<{
                  text={`${participant.firstName} ${participant.lastName}`}/>
       <ParticipantData extra={extra} participant={participant} tribe={tribe} />
       <Divider orientation="left">Dokumente</Divider>
-      <ParticipantConfirmations participant={participant} isBevo={isBevo} />
-      { isBevo && participant.role !== "participant" && (
+      <ParticipantConfirmations participant={participant} isBevo={accessLevel === "bevo"} />
+      { accessLevel === "bevo" && participant.role !== "participant" && (
         <>
           <Divider orientation="left">BeVos</Divider>
           <BevoConfirmations participant={participant} />
@@ -113,7 +114,7 @@ const Participants: React.FC<{
   )
 
   return (
-    <Page showLogin={true} loggedIn={true}>
+    <Page level={accessLevel} showLogin={true}>
       <Container fluid="md" className="ps-0 pe-0">
         { showEdit ? editPage : overview}
       </Container>
