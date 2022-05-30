@@ -45,8 +45,8 @@ const ParticipantsQuery = (user: ParticipantsControllerUser) => {
 
 const ParticipantsAccess: Access = ({ req: { user } }: { req: { user: ParticipantsControllerUser }}) => ParticipantsQuery(user)
 
-const BevoOnlyFieldAccess: FieldAccess = ({ req: { user } }: { req: { user: ParticipantsControllerUser }}): boolean => {
-  return user && (user.collection === "users" || isBevo(user as TeilnehmendenverwalterIn))
+const BevoOnlyFieldAccess: FieldAccess = ({ req: { user} }) => {
+  return user !== null && (user.collection === "users" || isBevo(user as unknown as TeilnehmendenverwalterIn))
 }
 
 const BevoOnlyAccess: Access = ({ req: { user } }: { req: { user: ParticipantsControllerUser }}): boolean => {
@@ -185,7 +185,7 @@ const Tribe: Field = {
   required: true,
   access: {
     update: ({ req: { user }}) => {
-      return user.collection === "users" || isBevo((user as unknown) as TeilnehmendenverwalterIn)
+      return user !== null && (user.collection === "users" || isBevo((user as unknown) as TeilnehmendenverwalterIn))
     }
   }
 }

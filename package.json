@@ -33,8 +33,8 @@
     "pdf-lib": "^1.17.1",
     "react": "^18.1.0",
     "react-bootstrap": "^2.1.1",
-    "react-countdown": "^2.3.2",
-    "react-dom": "^18.1.0"
+    "react-dom": "^18.1.0",
+    "react-timer-hook": "^3.0.5"
   },
   "devDependencies": {
     "@babel/register": "^7.16.9",

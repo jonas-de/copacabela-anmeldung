@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Row as BSRow } from 'react-bootstrap';
-import Countdown from "react-countdown";
+import { useTimer } from 'react-timer-hook';
 import { GetServerSideUserPropsContext } from '../utilitites/Authentication';
 import Page from '../components/layout/Page';
 import Closed from '../components/RegistrationClosed';
@@ -18,19 +18,22 @@ const getServerSideProps = (context: GetServerSideUserPropsContext) => {
 
 const CountdownView: React.FC = () => {
 
-
-  const renderer = ({ days, hours, minutes, seconds, completed }: {days: number, hours: number, minutes: number, seconds: number, completed: boolean}) => {
-    if (completed) {
-      // Render a completed state
-      return <h1><strong>Das CopacaBeLa läuft 🎉🏕️</strong></h1>;
-    } else {
-      // Render a countdown
-      return <span style={{ fontSize: 32, fontWeight: "bold", fontFamily: "monospace"}}>noch<br />{days} {days === 1 ? "Tag" : "Tage"}<br />{String(hours).padStart(2, "0")}:{String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}</span>;
-    }
-  }
-
-  // @ts-ignore
-  return <Countdown date={Date.parse("2022-06-04 08:00")} renderer={renderer} />
+  const { seconds, minutes, hours, days, } = useTimer({
+    expiryTimestamp: new Date(2022, 5, 4, 8),
+    autoStart: true
+  });
+  return (
+    <>
+      { (seconds !== 0 || minutes !== 0 || hours !== 0 || days !== 0) && (
+        <span style={{ fontSize: 32, fontWeight: "bold", fontFamily: "monospace,sans-serif"}}>noch<br />{days} {days === 1 ? "Tag" : "Tage"}<br />{String(hours).padStart(2, "0")}:{String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}</span>
+      )}
+      {
+        seconds === 0 && minutes === 0 && hours === 0 && days === 0 && (
+          <h1><strong>Das CopacaBeLa läuft 🎉🏕️</strong></h1>
+        )
+      }
+    </>
+  )
 }
 
 // @ts-ignore
@@ -41,9 +44,6 @@ const page: React.FC<{ accessLevel: AccessLevelText | "noUser"}> = ({ accessLeve
       <Container className="pt-4 pb-4">
         <BSRow className="justify-content-center">
           <Image src={"/images/Copacabela.png"} width={200} height={200} alt={"CopacaBeLa-Logo"} />
-        </BSRow>
-        <BSRow className="pt-2 pb-4 text-center">
-          <h5>vom 04. - 11. Juni 2022 im Scout Camp Austria</h5>
         </BSRow>
         <BSRow className="text-center pt-4 pb-4">
           { /* <ParticipantsForm /> */ }

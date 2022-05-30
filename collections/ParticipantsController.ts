@@ -116,7 +116,7 @@ const ParticipantsController: CollectionConfig = {
       label: "Zugriffsbereich",
       required: true,
       access: {
-        update: ({ req: { user }}) => user.collection === "users"
+        update: ({ req: { user }}) => user !== null && user.collection === "users"
       }
     },
     {
@@ -129,7 +129,7 @@ const ParticipantsController: CollectionConfig = {
       label: "Stufe",
       required: true,
       access: {
-        update: ({ req: { user }}) => user.collection === "users"
+        update: ({ req: { user }}) => user !== null && user.collection === "users"
       }
     }
   ],
@@ -167,7 +167,7 @@ const ParticipantsController: CollectionConfig = {
               ]},
             limit: 1
           })
-          if (req!.user.collection !== "users" && res.totalDocs > 0) {
+          if (req!.user !== null && req!.user.collection !== "users" && res.totalDocs > 0) {
             return {}
           }
           const generator = require("generate-password")

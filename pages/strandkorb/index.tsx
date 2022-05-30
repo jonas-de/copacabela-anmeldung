@@ -114,7 +114,7 @@ const Strandkorb: React.FC<{ accessLevel: AccessLevelText}> = ({ accessLevel}) =
                 size="large"
                 type="text"
                 maxLength={4}
-                pattern="\d+"
+                pattern="\d*"
                 onChange={sanitizeInput}
                 value={input}
                 placeholder="0000"
