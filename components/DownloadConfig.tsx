@@ -1,12 +1,14 @@
 import { Form, message, Modal, Radio, Checkbox, Space, Row, Col, Button } from 'antd';
 import React from 'react';
-import { Fields } from '../utilitites/CSVCreator';
+import { BevoFields, Fields } from '../utilitites/CSVCreator';
+import { AccessLevelText } from '../utilitites/Levels';
 
 const DownloadConfig: React.FC<{
+  accessLevel: AccessLevelText
   tribe: number,
   visible: boolean,
   close: VoidFunction,
-}> = ({ tribe, visible, close }) => {
+}> = ({ accessLevel, tribe, visible, close }) => {
 
   const download = async (config: any) => {
 
@@ -57,6 +59,11 @@ const DownloadConfig: React.FC<{
             <Space direction="vertical">
               { Object.values(Fields).map((field) => (
                     <Checkbox key={field.slug} value={field.slug}>{field.title}</Checkbox>
+              ))}
+              { accessLevel === "bevo" && (
+                Object.values(BevoFields).map((field) => (
+                  <Checkbox key={field.slug} value={field.slug}>{field.title}</Checkbox>
+                )
               ))}
             </Space>
           </Checkbox.Group>

@@ -253,9 +253,33 @@ const Fields = {
   },
 }
 
+const BevoFields = {
+  checked2d2e: {
+    slug: "checked2d2e",
+    title: "Einsicht 2d/2e",
+    head: '"Einsicht 2d/2e"',
+    toText: (tn: TeilnehmerIn) => tn.review.course ? '"Ja"' : '"Nein"',
+  },
+  checkedClearance: {
+    slug: "checkedClearance",
+    title: "Einsicht UB",
+    head: '"Einsicht UB"',
+    toText: (tn: TeilnehmerIn) => tn.review.clearance ? '"Ja"' : '"Nein"',
+  },
+  checkedJuleica: {
+    slug: "checkedJuleica",
+    title: "Einsicht Juleica",
+    head: '"Einsicht Juleica"',
+    toText: (tn: TeilnehmerIn) => tn.review.juleica ? '"Ja"' : '"Nein"',
+  }
+}
+
 const generateCSVLine = (tn: TeilnehmerIn, fields: string[]): string => {
-  // @ts-ignore
-  return fields.map((field) => Fields[field].toText(tn)).join(";")
+
+  return fields.map((field) => {
+    // @ts-ignore
+    return { ...Fields, ...BevoFields}[field].toText(tn)
+  }).join(";")
 }
 
 const generateCSV = (tns: TeilnehmerIn[], fields: string[]): string => {
@@ -287,11 +311,15 @@ const generateCSV = (tns: TeilnehmerIn[], fields: string[]): string => {
     "NaMi",
   ]
 
-  // @ts-ignore
-  const headLine = fields.map((field) => Fields[field].head).join(";")
+
+  const headLine = fields.map((field) => {
+    // @ts-ignore
+    return { ...Fields, ...BevoFields }[field].head
+  }).join(";")
+
   const tnLines = tns.map((tn) => generateCSVLine(tn, fields))
   return [headLine, ...tnLines].join("\n")
 }
 
 export default generateCSV
-export { Fields }
+export { Fields, BevoFields }

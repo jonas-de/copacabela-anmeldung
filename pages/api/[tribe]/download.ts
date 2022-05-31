@@ -3,7 +3,7 @@ import { isValidTribeOrDistrict } from '../../../utilitites/Tribes';
 import { TeilnehmendenverwalterIn, TeilnehmerIn } from '../../../payload-types';
 import payload from 'payload';
 import { Where } from 'payload/types';
-import CSVCreator from '../../../utilitites/CSVCreator';
+import CSVCreator, { BevoFields } from '../../../utilitites/CSVCreator';
 
 const handler: NextApiHandler = async (req, res) => {
   const tribe: number = Number(req.query.tribe)
@@ -48,7 +48,10 @@ const handler: NextApiHandler = async (req, res) => {
       }
     }
   }
-  const fields = (req.query.fields as string).split(",")
+  let fields = (req.query.fields as string).split(",")
+  if (user.tribe !== "1312" || user.level !== "all") {
+    fields = fields.filter((field) => !Object.keys(BevoFields).includes(field))
+  }
 
   const participants = await payload.find<TeilnehmerIn>({
     collection: "participants",

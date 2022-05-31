@@ -98,6 +98,7 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe, acces
           />
           */ }
         <DownloadConfig
+          accessLevel={accessLevel}
           tribe={tribe.number}
           visible={showDownload}
           close={() => setShowDownload(false)}
@@ -278,7 +279,7 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe, acces
           />
           )}
         </Table>
-        { accessLevel === "all" && (
+        {( accessLevel === "all" || accessLevel === "bevo") && (
           <Button onClick={() => setShowDownload(true)}>
             Download
           </Button>
