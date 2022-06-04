@@ -532,7 +532,7 @@ const StrandkorbCredit: Field = {
   required: true
 }
 
-/*
+
 const Location: Field = {
   name: "location",
   type: "select",
@@ -543,7 +543,14 @@ const Location: Field = {
   label: "Wo ist",
   required: true,
 }
-*/
+
+const Wristband: Field = {
+  name: "wristband",
+  type: "text",
+  label: "NFC-ID",
+  required: false
+}
+
 
 const participantFields: Field[] = [
   Role,
@@ -584,7 +591,9 @@ const participantFields: Field[] = [
   State,
   CancelledAt,
   LateRegistration,
-  StrandkorbCredit
+  StrandkorbCredit,
+  Location,
+  Wristband
 ]
 
 // @ts-ignore

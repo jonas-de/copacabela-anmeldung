@@ -138,12 +138,13 @@ const CovidVaccinationStatesObject: {
   }
 }
 
-export type LocationText = "home" | "onsite" | "offsite"
+export type LocationText = "home" | "onsite" | "offsite" | "backHome"
 
 const LocationObject: {
   home: Location,
   onsite: Location,
-  offsite: Location
+  offsite: Location,
+  backHome: Location
 } = {
   home: {
     slug: "home",
@@ -160,6 +161,11 @@ const LocationObject: {
     name: "Offsite",
     color: "warning"
   },
+  backHome: {
+    slug: "backHome",
+    name: "Abgereist",
+    color: "error",
+  }
 }
 
 
