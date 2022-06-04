@@ -20,6 +20,9 @@ import { BeforeChangeHook } from 'payload/dist/globals/config/types';
 import moment from 'moment-timezone';
 
 const ParticipantsQuery = (user: ParticipantsControllerUser) => {
+  if (user === null) {
+    return false
+  }
   if (user.collection == "users") {
     return true
   }
