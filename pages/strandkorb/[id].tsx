@@ -132,7 +132,7 @@ const StrandkorbPayment: React.FC<{
                 <List.Item>
                   <Row style={{ width: "100%"}}>
                     <Col xs="auto"><strong>{item.name}</strong></Col>
-                    <Col xs="auto" className="ps-2 pe-4 me-auto">{item.price.toFixed(2)}€</Col>
+                    <Col xs="auto" className="ps-2 pe-4 me-auto">{item.price.toFixed(2)} P.</Col>
                     <Col style={{ display: 'flex', justifyContent: 'flex-end' }}>
                       <Button
                         icon={<MinusOutlined />}
