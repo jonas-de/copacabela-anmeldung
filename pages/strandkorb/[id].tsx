@@ -98,7 +98,7 @@ const StrandkorbPayment: React.FC<{
     const body = await res.json()
     if (res.ok) {
       await router.replace("/strandkorb")
-      message.success(`${(credit - body.doc.amount).toFixed(2)}€ Restguthaben`)
+      message.success(`${(credit - body.doc.amount).toFixed(2)} P. Restguthaben`)
     } else {
       setLoading(false)
       message.error(`Fehler: ${body.errors.map((e: { message: any; }) => e.message).join(",")}`)
@@ -153,7 +153,7 @@ const StrandkorbPayment: React.FC<{
           </Col>
         </Row>
         <Row className="pt-4">
-          <strong>Guthaben: {credit.toFixed(2)}€</strong>
+          <strong>Guthaben: {credit.toFixed(2)} P.</strong>
         </Row>
         <Row className="pt-2">
           <Button
@@ -164,7 +164,7 @@ const StrandkorbPayment: React.FC<{
             disabled={cartValue === 0}
             style={{ width: 200 }}
           >
-            {cartValue.toFixed(2)}€ bezahlen
+            {cartValue.toFixed(2)} P. bezahlen
           </Button>
         </Row>
         <Row className="pt-2">
