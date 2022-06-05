@@ -530,7 +530,7 @@ const StrandkorbCredit: Field = {
   name: "strandkorbCredit",
   type: "number",
   min: 0,
-  max: 10,
+  max: 20,
   label: "Strandkorbguthaben",
   required: true
 }
