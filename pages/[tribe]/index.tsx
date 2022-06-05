@@ -260,8 +260,7 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe, acces
               return <LocationView tn={record} isBevo={accessLevel === "bevo"}/>
             }}
             />
-          { accessLevel === "bevo" && (
-            <Table.Column
+          <Table.Column
               title="Dokumente"
               key="documents"
               filters={[{ text: "Vollständig", value: "all" }, { text: "Unvollständig", value: "missing" }]}
@@ -276,7 +275,6 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe, acces
               render={(_, record,) => {
                 return <DocumentView tn={record} isBevo={accessLevel === "bevo"}/>
               }} />
-          )}
           { /*
           <Table.Column
             title="Buchungsart"

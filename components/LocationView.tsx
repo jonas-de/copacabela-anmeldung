@@ -3,7 +3,7 @@ import { TeilnehmerIn } from '../payload-types';
 import { getLocation, LocationText } from '../utilitites/Wording';
 import defaultFetch from '../utilitites/defaultFetch';
 import { Button, message, Tag } from 'antd';
-import { LoginOutlined, LogoutOutlined, PauseOutlined } from '@ant-design/icons';
+import { LinkOutlined, LoginOutlined, LogoutOutlined, PauseOutlined } from '@ant-design/icons';
 
 const LocationView: React.FC<{ tn: TeilnehmerIn, isBevo: boolean }> = ({ tn, isBevo }) => {
   const [location, setLocation] = useState(tn.location)
@@ -32,6 +32,9 @@ const LocationView: React.FC<{ tn: TeilnehmerIn, isBevo: boolean }> = ({ tn, isB
         <Button icon={<PauseOutlined />} onClick={() => updateLocation("offsite")} />
         <Button icon={<LogoutOutlined />} onClick={() => updateLocation("backHome")} />
       </>
+    }
+    { (isBevo && tn.wristband !== undefined) &&
+      <LinkOutlined />
     }
   </>)
 }

@@ -86,7 +86,7 @@ const Participants: React.FC<{
           </Button>
       )}
       */ }
-      { participant.state === "confirmed" && (
+      { (accessLevel === "bevo" && participant.state === "confirmed") && (
           <Button style={{margin: 8}} danger icon={<CloseOutlined />} onClick={() => updateState("cancelled")}>Stornieren</Button>
       )}
       {accessLevel === "bevo" &&
