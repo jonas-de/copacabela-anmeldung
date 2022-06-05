@@ -24,17 +24,17 @@ const LocationView: React.FC<{ tn: TeilnehmerIn, isBevo: boolean }> = ({ tn, isB
     <Tag color={getLocation(location).color} style={{ paddingRight: 8 }}>
       { getLocation(location).name }
     </Tag>
-    { (isBevo && tn.location !== "onsite") &&
+    { (isBevo && location !== "onsite") &&
       <Button icon={<LoginOutlined />} onClick={() => updateLocation("onsite")} />
     }
-    { (isBevo && tn.location === "onsite") &&
+    { (isBevo && location === "onsite") &&
       <>
         <Button icon={<PauseOutlined />} onClick={() => updateLocation("offsite")} />
         <Button icon={<LogoutOutlined />} onClick={() => updateLocation("backHome")} />
       </>
     }
     { (isBevo && tn.wristband !== undefined) &&
-      <LinkOutlined />
+      <LinkOutlined style={{ paddingLeft: 4 }}/>
     }
   </>)
 }
