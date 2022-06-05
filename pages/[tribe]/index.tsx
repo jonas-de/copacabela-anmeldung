@@ -20,7 +20,7 @@ import Levels, {
 import {
   compareRegistrationStates,
   getLocation,
-  getState, LocationText,
+  getState, LocationObject, LocationText,
   RegistrationStates
 } from '../../utilitites/Wording';
 import Image from 'next/image';
@@ -316,6 +316,10 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe, acces
             title="Ort"
             dataIndex="location"
             key="location"
+            filters={Object.values(LocationObject).map(loc => ({ text: loc.name, value: loc.slug }))}
+            onFilter={(value, record: TeilnehmerIn) => {
+              return record.location === value
+            }}
             render={(_, record: TeilnehmerIn) => {
               return (<>
                 <Tag color={getLocation(record.location).color}>
