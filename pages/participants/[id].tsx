@@ -89,7 +89,8 @@ const Participants: React.FC<{
       { participant.state === "confirmed" && (
           <Button style={{margin: 8}} danger icon={<CloseOutlined />} onClick={() => updateState("cancelled")}>Stornieren</Button>
       )}
-        <Button style={{margin: 8}} icon={<EditOutlined />} onClick={() => setShowEdit(true)}>Bearbeiten</Button>
+      {accessLevel === "bevo" &&
+        <Button style={{margin: 8}} icon={<EditOutlined />} onClick={() => setShowEdit(true)}>Bearbeiten</Button>}
     </>
   )
 
@@ -97,7 +98,7 @@ const Participants: React.FC<{
     <>
       <ImageHead image={tribe.image}
                  text={`${participant.firstName} ${participant.lastName}`}/>
-      <ParticipantData extra={extra} participant={participant} tribe={tribe} />
+      <ParticipantData extra={extra} participant={participant} tribe={tribe} isBevo={accessLevel === "bevo"}/>
       <Divider orientation="left">Dokumente</Divider>
       <ParticipantConfirmations participant={participant} isBevo={accessLevel === "bevo"} />
       { accessLevel === "bevo" && participant.role !== "participant" && (

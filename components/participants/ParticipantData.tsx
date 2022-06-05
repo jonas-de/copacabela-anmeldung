@@ -14,14 +14,16 @@ import {
 import { getLevelWithNone } from '../../utilitites/Levels';
 import Image from 'next/image';
 import { dateObjectToText } from '../../utilitites/Fees';
+import LocationView from '../LocationView';
 
 export type ShowParticipantProps = {
   extra: React.ReactNode
   participant: TeilnehmerIn,
-  tribe: Tribe
+  tribe: Tribe,
+  isBevo: boolean
 }
 
-const ParticipantData: React.FC<ShowParticipantProps> = ({ extra, participant, tribe }) => {
+const ParticipantData: React.FC<ShowParticipantProps> = ({ extra, participant, tribe, isBevo }) => {
 
   const level = getLevelWithNone(participant.level)
   const state = getState(participant.state)
@@ -45,9 +47,7 @@ const ParticipantData: React.FC<ShowParticipantProps> = ({ extra, participant, t
         <Tag style={{ marginLeft: 8 }} color={participant.lateRegistration ? "orange" : "green"}>
           {participant.lateRegistration ? "Nachmeldung" : "Normale Buchung"}
         </Tag>
-        <Tag style={{ marginLeft: 8 }} color={getLocation(participant.location).color}>
-          {getLocation(participant.location).name}
-        </Tag>
+        <LocationView tn={participant} isBevo={isBevo} />
       </Descriptions.Item>
       <Descriptions.Item label="Vorname">{participant.firstName}</Descriptions.Item>
       <Descriptions.Item label="Nachname">{participant.lastName}</Descriptions.Item>

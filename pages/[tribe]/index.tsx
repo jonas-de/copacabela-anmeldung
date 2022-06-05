@@ -39,6 +39,8 @@ import { handedInDocuments } from '../../utilitites/DocumentsToHandIn';
 import { dateObjectToText } from '../../utilitites/Fees';
 import DownloadConfig from '../../components/DownloadConfig';
 import { isBevo } from '../../collections/ParticipantsController';
+import DocumentView from '../../components/DocumentView';
+import LocationView from '../../components/LocationView';
 
 const getServerSideProps = withUser( async (context: GetServerSideUserPropsContext) => {
   const tribe: number = Number(context.params!["tribe"])
@@ -77,61 +79,6 @@ const getServerSideProps = withUser( async (context: GetServerSideUserPropsConte
   }}
 })
 
-const DocumentView: React.FC<{ tn: TeilnehmerIn }> = ({ tn }) => {
-  const [anmeldung, setAnmeldung] = useState(tn.receivedRegistration)
-  const [photo, setPhoto] = useState(tn.receivedPhotoPermission)
-  const [leader, setLeader] = useState(tn.receivedLeaderInfo)
-
-
-  const updateAnmeldung = async () => {
-    const res = await defaultFetch(`/api/participants/${tn.id}`, "PUT", {
-      receivedRegistration: !anmeldung
-    })
-    if (res.ok) {
-      setAnmeldung(!anmeldung)
-      message.success("Gespeichert")
-    } else {
-      message.error(await res.json())
-    }
-  }
-
-  const updatePhoto = async () => {
-    if (photo === "never") {
-      return
-    }
-    const res = await defaultFetch(`/api/participants/${tn.id}`, "PUT", {
-      receivedPhotoPermission: photo === "no" ? "yes" : "no"
-    })
-    if (res.ok) {
-      setPhoto(photo === "no" ? "yes" : "no")
-      message.success("Gespeichert")
-    } else {
-      message.error(await res.json())
-    }
-  }
-
-  const updateLeader = async () => {
-    const res = await defaultFetch(`/api/participants/${tn.id}`, "PUT", {
-      receivedLeaderInfo: !leader
-    })
-    if (res.ok) {
-      setLeader(!leader)
-      message.success("Gespeichert")
-    } else {
-      message.error(await res.json())
-    }
-  }
-
-  return (<>
-    <Checkbox checked={anmeldung} onClick={updateAnmeldung}><FileOutlined /></Checkbox>
-    <Checkbox disabled={photo === "never"} checked={photo === "yes"} onClick={updatePhoto}><FileImageOutlined /></Checkbox>
-    { tn.role !== "participant" && (
-      <Checkbox checked={leader} onClick={updateLeader}><ExceptionOutlined /></Checkbox>
-    )}
-  </>)
-}
-
-
 const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe, accessLevel: AccessLevelText }> = ({ participants, tribe, accessLevel }) => {
 
   /*
@@ -149,22 +96,11 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe, acces
 
   const [showDownload, setShowDownload] = useState(false)
 
+  /*
   const [showDocuments, setShowDocuments] = useState(false)
   const [showPresence, setShowPresence] = useState(false)
   const [showComments, setShowComments] = useState(false)
-
-
-  const updateLocation = async (id: string, location: LocationText) => {
-    const res = await defaultFetch(`/api/participants/${id}`, "PUT", {
-      location
-    })
-    if (res.ok) {
-      message.success("Gespeichert")
-    } else {
-      message.error(await res.json())
-    }
-  }
-
+  */
 
   return (
     <Page level={accessLevel} showLogin={true}>
@@ -321,15 +257,9 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe, acces
               return record.location === value
             }}
             render={(_, record: TeilnehmerIn) => {
-              return (<>
-                <Tag color={getLocation(record.location).color}>
-                  { getLocation(record.location).name }
-                </Tag>
-                <Button icon={<LoginOutlined />} onClick={() => updateLocation(record.id, "onsite")} />
-                <Button icon={<PauseOutlined />} onClick={() => updateLocation(record.id, "offsite")} />
-                <Button icon={<LogoutOutlined />} onClick={() => updateLocation(record.id, "backHome")} />
-              </>)
-            }} />
+              return <LocationView tn={record} isBevo={accessLevel === "bevo"}/>
+            }}
+            />
           { accessLevel === "bevo" && (
             <Table.Column
               title="Dokumente"
@@ -344,7 +274,7 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe, acces
                 }
               }}
               render={(_, record,) => {
-                return <DocumentView tn={record} />
+                return <DocumentView tn={record} isBevo={accessLevel === "bevo"}/>
               }} />
           )}
           { /*

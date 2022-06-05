@@ -625,8 +625,8 @@ const Participants: CollectionConfig = {
   access: {
     create: AdminAccess,
     read: ParticipantsAccess,
-    update: ParticipantsAccess,
-    delete: ParticipantsAccess,
+    update: BevoOnlyAccess,
+    delete: BevoOnlyAccess,
   },
   hooks: {
     beforeValidate: [
