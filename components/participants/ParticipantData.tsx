@@ -8,7 +8,7 @@ import {
   getCovidVaccinationState,
   getEatingBehaviour,
   getGender,
-  getInsuranceType,
+  getInsuranceType, getLocation,
   getState
 } from '../../utilitites/Wording';
 import { getLevelWithNone } from '../../utilitites/Levels';
@@ -44,6 +44,9 @@ const ParticipantData: React.FC<ShowParticipantProps> = ({ extra, participant, t
         <Tag style={{ marginLeft: 16 }} color={state.color}>{state.name}</Tag>
         <Tag style={{ marginLeft: 8 }} color={participant.lateRegistration ? "orange" : "green"}>
           {participant.lateRegistration ? "Nachmeldung" : "Normale Buchung"}
+        </Tag>
+        <Tag style={{ marginLeft: 8 }} color={getLocation(participant.location).color}>
+          {getLocation(participant.location).name}
         </Tag>
       </Descriptions.Item>
       <Descriptions.Item label="Vorname">{participant.firstName}</Descriptions.Item>

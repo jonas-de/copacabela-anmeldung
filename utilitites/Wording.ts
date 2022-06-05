@@ -216,7 +216,7 @@ const getPhotopermissionState = (slug: string): Wording => {
   return PhotoPermissionStatesObject[slug as PhotoPermissionText]
 }
 
-const getLocation = (slug: string): Wording => {
+const getLocation = (slug: string): Location => {
   return LocationObject[slug as LocationText]
 }
 
