@@ -193,7 +193,7 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe, acces
               <Col flex="auto">
                 <Button icon={<PlusOutlined />} style={{ float: "right" }} onClick={() => setShowNew(true)} type="primary">Teilnehmer:in anlegen</Button>
               </Col>
-              */ }
+
               <Col style={{ marginLeft: "auto", paddingLeft: 32 }}>
                 <Switch checked={showDocuments} onChange={() => { setShowDocuments(!showDocuments)}} />
                 {" "}
@@ -209,6 +209,7 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe, acces
                 {" "}
                 Anmerkungen
               </Col>
+              */ }
             </Row>
             )}
           dataSource={participants}
