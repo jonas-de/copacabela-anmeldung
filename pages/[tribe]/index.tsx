@@ -100,7 +100,7 @@ const DocumentView: React.FC<{ tn: TeilnehmerIn }> = ({ tn }) => {
       return
     }
     const res = await defaultFetch(`/api/participants/${tn.id}`, "PUT", {
-      receivedPhotoPermission: !photo
+      receivedPhotoPermission: photo === "no" ? "yes" : "no"
     })
     if (res.ok) {
       setPhoto(photo === "no" ? "yes" : "no")
@@ -124,7 +124,7 @@ const DocumentView: React.FC<{ tn: TeilnehmerIn }> = ({ tn }) => {
 
   return (<>
     <Checkbox checked={anmeldung} onClick={updateAnmeldung}><FileOutlined /></Checkbox>
-    <Checkbox checked={photo === "yes"} onClick={updatePhoto}><FileImageOutlined /></Checkbox>
+    <Checkbox disabled={photo === "never"} checked={photo === "yes"} onClick={updatePhoto}><FileImageOutlined /></Checkbox>
     { tn.role !== "participant" && (
       <Checkbox checked={leader} onClick={updateLeader}><ExceptionOutlined /></Checkbox>
     )}
@@ -325,7 +325,7 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe, acces
                 <Button icon={<LogoutOutlined />} onClick={() => updateLocation(record.id, "backHome")} />
               </>)
             }} />
-          { accessLevel === "bevo" && showDocuments && (
+          { accessLevel === "bevo" && (
             <Table.Column
               title="Dokumente"
               key="documents"
