@@ -119,6 +119,8 @@ export interface TeilnehmerIn {
   cancelledAt?: string;
   lateRegistration?: boolean;
   strandkorbCredit: number;
+  location: 'home' | 'onsite' | 'offsite' | 'backHome';
+  wristband?: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

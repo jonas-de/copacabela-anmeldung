@@ -315,7 +315,7 @@ const Participants: React.FC<{ participants: TeilnehmerIn[], tribe: Tribe, acces
             title="Ort"
             dataIndex="location"
             key="location"
-            render={(_, record) => {
+            render={(_, record: TeilnehmerIn) => {
               return (<>
                 <Tag color={getLocation(record.location).color}>
                   { getLocation(record.location).name }
