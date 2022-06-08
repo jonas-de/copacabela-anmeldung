@@ -5,7 +5,7 @@ import {
   getCovidVaccinationState,
   getEatingBehaviour,
   getGender,
-  getInsuranceType, getPhotopermissionState,
+  getInsuranceType, getLocation, getPhotopermissionState,
   getState
 } from './Wording';
 import { getTribeForNumber } from './Tribes';
@@ -186,6 +186,14 @@ const Fields = {
     toText: (tn: TeilnehmerIn) => {
       return `"${Object.values(tn.presence).filter((present) => present).length}"`
     },
+  },
+  location: {
+    slug: "location",
+    title: "Ort",
+    head: "Ort",
+    toText: (tn: TeilnehmerIn) => {
+      return `"${getLocation(tn.location).name}"`
+    }
   },
   comments: {
     slug: "comments",
