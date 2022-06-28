@@ -29,7 +29,7 @@ const CountdownView: React.FC = () => {
       )}
       {
         seconds === 0 && minutes === 0 && hours === 0 && days === 0 && (
-          <h1><strong>Das CopacaBeLa läuft 🎉🏕️</strong></h1>
+          <h1><strong>Schön wars!️</strong></h1>
         )
       }
     </>

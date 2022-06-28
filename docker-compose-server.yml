@@ -6,8 +6,6 @@ services:
     restart: unless-stopped
     depends_on:
       - mongo
-    ports:
-      - "3000:3000"
     environment:
       - PORT=${PORT}
       - PAYLOAD_SECRET_KEY=${PAYLOAD_SECRET_KEY}
@@ -21,6 +19,11 @@ services:
       - SMTP_USER=${SMTP_USER}
       - SMTP_PASS=${SMTP_PASS}
       - SMTP_PORT=${SMTP_PORT}
+      - VIRTUAL_HOST=anmeldung.copacabela.de
+      - LETSENCRYPT_HOST=anmeldung.copacabela.de
+    networks:
+      - default
+      - nginx_proxy
 
   mongo:
     image: mongo:4
@@ -29,11 +32,17 @@ services:
       - "27017:27017"
     volumes:
       - data_db:/data/db
-      - data_config:/data/config
+      - data_configdb:/data/configdb
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+    networks:
+      - default
 
 volumes:
   data_db:
-  data_config:
+  data_configdb:
+
+networks:
+  nginx_proxy:
+    external: true
