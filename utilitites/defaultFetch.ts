@@ -1,12 +1,16 @@
-const defaultFetch = (info: RequestInfo, method: string, body: object | undefined): Promise<Response> => {
+const defaultFetch = (
+  info: RequestInfo,
+  method: string,
+  body: object | undefined
+): Promise<Response> => {
   return fetch(info, {
     method,
-    credentials: "include",
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(body)
-  })
-}
+    body: JSON.stringify(body),
+  });
+};
 
-export default defaultFetch
+export default defaultFetch;

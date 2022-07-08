@@ -1,38 +1,44 @@
-import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
-import { IncomingMessage } from 'http';
-import { NextApiRequestCookies } from 'next/dist/server/api-utils';
-import { TeilnehmendenverwalterIn } from '../payload-types';
-import { ParsedUrlQuery } from 'querystring';
-import { PreviewData } from 'next/types';
+import {GetServerSidePropsContext, GetServerSidePropsResult} from 'next';
+import {IncomingMessage} from 'http';
+import {NextApiRequestCookies} from 'next/dist/server/api-utils';
+import {TeilnehmendenverwalterIn} from '../payload-types';
+import {ParsedUrlQuery} from 'querystring';
+import {PreviewData} from 'next/types';
 
 export type GetServerSideUserPropsContext<
   Q extends ParsedUrlQuery = ParsedUrlQuery,
   D extends PreviewData = PreviewData
-  > = GetServerSidePropsContext<Q, D> & { req: IncomingMessage & { cookies: NextApiRequestCookies, user: TeilnehmendenverwalterIn } }
+> = GetServerSidePropsContext<Q, D> & {
+  req: IncomingMessage & {
+    cookies: NextApiRequestCookies;
+    user: TeilnehmendenverwalterIn;
+  };
+};
 
 export type GetServerSideUserProps<
-  P extends { [key: string]: any } = { [key: string]: any },
+  P extends {[key: string]: unknown} = {[key: string]: unknown},
   Q extends ParsedUrlQuery = ParsedUrlQuery,
   D extends PreviewData = PreviewData
-  > = (context: GetServerSideUserPropsContext<Q, D>) => Promise<GetServerSidePropsResult<P>>
+> = (
+  context: GetServerSideUserPropsContext<Q, D>
+) => Promise<GetServerSidePropsResult<P>>;
 
 const withUser = (handler: GetServerSideUserProps) => {
   return async (context: GetServerSideUserPropsContext) => {
-
-    const payloadCookie = context.req.cookies["payload-token"]
+    const payloadCookie = context.req.cookies['payload-token'];
     if (payloadCookie === undefined) {
       return {
         redirect: {
           destination: `/login?redirect=${context.req.url}`,
-          permanent: false
-        }
-      }
+          permanent: false,
+        },
+      };
     }
-    Object.defineProperty(context, "user", {
-      value: payloadCookie
-    })
-    return handler(context)
-  }
-}
+    Object.defineProperty(context, 'user', {
+      value: payloadCookie,
+    });
+    return handler(context);
+  };
+};
 
-export { withUser }
+export {withUser};

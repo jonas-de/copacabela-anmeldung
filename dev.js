@@ -1,7 +1,5 @@
 require('@babel/register')({
-  presets: [
-    'next/babel',
-  ],
+  presets: ['next/babel'],
   extensions: ['.ts', '.tsx', '.js', '.jsx'],
   env: {
     development: {
@@ -9,7 +7,6 @@ require('@babel/register')({
       retainLines: true,
     },
   },
-
 });
 
 require('./server');

@@ -1,4 +1,5 @@
-export type TribeNumber = 1312
+export type TribeNumber =
+  | 1312
   | 131202
   | 131203
   | 131204
@@ -9,97 +10,103 @@ export type TribeNumber = 1312
   | 131210
   | 131212
   | 131213
-  | 131214
+  | 131214;
 
 export interface Tribe {
-  name: string,
-  number: TribeNumber,
-  image: string
+  name: string;
+  number: TribeNumber;
+  image: string;
 }
 
-const TribesObject: { [key: string]: Tribe } = {
+const TribesObject: {[key: string]: Tribe} = {
   131202: {
-    name: "Heilig Engel",
+    name: 'Heilig Engel',
     number: 131202,
-    image: "Dpsg.png"
+    image: 'Dpsg.png',
   },
   131203: {
-    name: "St. Severin",
+    name: 'St. Severin',
     number: 131203,
-    image: "Dpsg.png"
+    image: 'Dpsg.png',
   },
   131204: {
-    name: "Maria Hilf",
+    name: 'Maria Hilf',
     number: 131204,
-    image: "Dpsg.png"
+    image: 'Dpsg.png',
   },
   131206: {
-    name: "Pater Rupert Mayer",
+    name: 'Pater Rupert Mayer',
     number: 131206,
-    image: "PRM.png"
+    image: 'PRM.png',
   },
   131207: {
-    name: "Maximilian Kolbe",
+    name: 'Maximilian Kolbe',
     number: 131207,
-    image: "Maxko.png"
+    image: 'Maxko.png',
   },
   131208: {
-    name: "St. Ansgar",
+    name: 'St. Ansgar',
     number: 131208,
-    image: "Ansgar.png"
+    image: 'Ansgar.png',
   },
   131209: {
-    name: "Frieden Christi",
+    name: 'Frieden Christi',
     number: 131209,
-    image: "FC.png"
+    image: 'FC.png',
   },
   131210: {
-    name: "Swapingo",
+    name: 'Swapingo',
     number: 131210,
-    image: "Swapingo.png"
+    image: 'Swapingo.png',
   },
   131212: {
-    name: "St. Anna",
+    name: 'St. Anna',
     number: 131212,
-    image: "Dpsg.png"
+    image: 'Dpsg.png',
   },
   131213: {
-    name: "St. Canisius",
+    name: 'St. Canisius',
     number: 131213,
-    image: "Canisius.png"
-  }
-}
+    image: 'Canisius.png',
+  },
+};
 
 const District: Tribe = {
-  name: "Bezirk",
+  name: 'Bezirk',
   number: 1312,
-  image: "Bezirkslogo.jpg"
-}
+  image: 'Bezirkslogo.jpg',
+};
 
-const Tribes: Tribe[] = Object.values(TribesObject)
+const Tribes: Tribe[] = Object.values(TribesObject);
 
-const TribesWithDistrict: Tribe[] = Tribes.concat(District)
+const TribesWithDistrict: Tribe[] = Tribes.concat(District);
 
 /**
  * Checks if the given number correspondents to a valid tribe from Muenchen-Isar
  * @param tribe number of a tribe to check
  */
 const isValidTribe = (tribe: number) => {
-  return tribe >= 131202 && tribe <= 131214 && tribe !== 131205 && tribe !== 131211
-}
+  return (
+    tribe >= 131202 && tribe <= 131214 && tribe !== 131205 && tribe !== 131211
+  );
+};
 
 const isValidTribeOrDistrict = (tribe: number) => {
-  return tribe === 1312 || isValidTribe(tribe)
-}
+  return tribe === 1312 || isValidTribe(tribe);
+};
 
 const getTribeForNumber = (tribe: number): Tribe => {
   if (tribe === 1312) {
-    return District
+    return District;
   }
-  return TribesObject[String(tribe)]
-}
+  return TribesObject[String(tribe)];
+};
 
-const compareTribes = (a: number, b: number): number => a < b ? -1 : 1
-
-export default Tribes
-export { TribesWithDistrict, District, isValidTribe, isValidTribeOrDistrict, getTribeForNumber, compareTribes }
+export default Tribes;
+export {
+  TribesWithDistrict,
+  District,
+  isValidTribe,
+  isValidTribeOrDistrict,
+  getTribeForNumber,
+};

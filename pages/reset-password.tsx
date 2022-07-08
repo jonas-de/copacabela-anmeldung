@@ -1,9 +1,8 @@
-import { GetServerSideUserPropsContext } from '../utilitites/Authentication';
+import {GetServerSideUserPropsContext} from '../utilitites/Authentication';
 import React from 'react';
-import Header from '../components/layout/Header';
-import { Container, Row } from 'react-bootstrap';
-import { Button, Form, Input, message } from 'antd';
-import { useRouter } from 'next/router';
+import {Container, Row} from 'react-bootstrap';
+import {Button, Form, Input, message} from 'antd';
+import {useRouter} from 'next/router';
 import defaultFetch from '../utilitites/defaultFetch';
 import Page from '../components/layout/Page';
 
@@ -11,53 +10,58 @@ const getServerSideProps = (context: GetServerSideUserPropsContext) => {
   if (context.req.user || !context.query.token) {
     return {
       redirect: {
-        destination: "/",
-        permanent: false
-      }
-    }
+        destination: '/',
+        permanent: false,
+      },
+    };
   }
   return {
     props: {
-      token: context.query.token
-    }
-  }
-}
+      token: context.query.token,
+    },
+  };
+};
 
-const ResetPWPage: React.FC<{ token: string }> = ({ token }) => {
+const ResetPWPage: React.FC<{token: string}> = ({token}) => {
+  const router = useRouter();
 
-  const router = useRouter()
-
-  const reset = async (values: any) => {
+  const reset = async (values: {password?: string}) => {
     if (values.password === undefined) {
-      await message.error("Gib ein neues Passwort ein")
+      await message.error('Gib ein neues Passwort ein');
     } else {
-      const res = await defaultFetch("api/participantscontroller/reset-password", "POST", {
+      const res = await defaultFetch(
+        'api/participantscontroller/reset-password',
+        'POST',
+        {
           password: values.password,
-          token
-      })
+          token,
+        }
+      );
       if (res.ok) {
-        await router.replace("/login")
+        await router.replace('/login');
       } else {
-        await message.error("Passwort konnte nicht zurückgesetzt werden.")
+        await message.error('Passwort konnte nicht zurückgesetzt werden.');
       }
     }
-  }
+  };
 
   const ResetPasswordForm: React.FC = () => (
     <Form
-      labelCol={{ span: 8}}
-      wrapperCol={{ span: 16 }}
+      labelCol={{span: 8}}
+      wrapperCol={{span: 16}}
       colon={false}
       onFinish={reset}
     >
       <Form.Item label="Neues Passwort" name="password">
-        <Input.Password style={{ width: 240 }} />
+        <Input.Password style={{width: 240}} />
       </Form.Item>
       <Form.Item label=" ">
-        <Button type="primary" style={{ width: 240 }} htmlType="submit">Passwort zurücksetzen</Button>
+        <Button type="primary" style={{width: 240}} htmlType="submit">
+          Passwort zurücksetzen
+        </Button>
       </Form.Item>
     </Form>
-  )
+  );
 
   return (
     <Page showLogin={false} level="noUser">
@@ -67,8 +71,8 @@ const ResetPWPage: React.FC<{ token: string }> = ({ token }) => {
         </Row>
       </Container>
     </Page>
-  )
-}
+  );
+};
 
-export default ResetPWPage
-export { getServerSideProps }
+export default ResetPWPage;
+export {getServerSideProps};

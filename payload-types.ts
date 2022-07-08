@@ -30,7 +30,14 @@ export interface TeilnehmendenverwalterIn {
     | '131212'
     | '131213'
     | '1312';
-  level: 'woelflinge' | 'jupfis' | 'pfadis' | 'rover' | 'all' | 'kitchen' | 'strandkorb';
+  level:
+    | 'woelflinge'
+    | 'jupfis'
+    | 'pfadis'
+    | 'rover'
+    | 'all'
+    | 'kitchen'
+    | 'strandkorb';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
