@@ -81,20 +81,6 @@ const Tribes: Tribe[] = Object.values(TribesObject);
 
 const TribesWithDistrict: Tribe[] = Tribes.concat(District);
 
-/**
- * Checks if the given number correspondents to a valid tribe from Muenchen-Isar
- * @param tribe number of a tribe to check
- */
-const isValidTribe = (tribe: number) => {
-  return (
-    tribe >= 131202 && tribe <= 131214 && tribe !== 131205 && tribe !== 131211
-  );
-};
-
-const isValidTribeOrDistrict = (tribe: number) => {
-  return tribe === 1312 || isValidTribe(tribe);
-};
-
 const getTribeForNumber = (tribe: number): Tribe => {
   if (tribe === 1312) {
     return District;
@@ -102,11 +88,4 @@ const getTribeForNumber = (tribe: number): Tribe => {
   return TribesObject[String(tribe)];
 };
 
-export default Tribes;
-export {
-  TribesWithDistrict,
-  District,
-  isValidTribe,
-  isValidTribeOrDistrict,
-  getTribeForNumber,
-};
+export {TribesWithDistrict, District, getTribeForNumber};

@@ -390,16 +390,6 @@ const LeaderInformation: React.FC<{form: FormInstance}> = ({form}) => {
           </Row>
         </Input.Group>
       </Form.Item>
-      <Form.Item label="2d/2e-Schulung" name="course">
-        <DatePicker
-          locale={deDE}
-          placeholder="Datum der Schulung (optional)"
-          showToday={false}
-          style={doubleWidth}
-          picker="date"
-          format="DD.MM.YYYY"
-        />
-      </Form.Item>
     </>
   );
 };

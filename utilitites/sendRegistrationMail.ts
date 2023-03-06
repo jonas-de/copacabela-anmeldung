@@ -5,13 +5,11 @@ import payload from 'payload';
 
 const mustache = require('mustache');
 
-const generateMailText = (name: string, token: string): string => {
+const generateMailText = (name: string, id: string, token: string): string => {
   try {
     const mail = fs.readFileSync('mails/Registration.html');
 
-    const url = `${
-      process.env.PAYLOAD_PUBLIC_SERVER_URL
-    }/confirm-booking?token=${token || ''}`;
+    const url = `${process.env.PAYLOAD_PUBLIC_SERVER_URL}/confirm?token=${token}&id=${id}`;
 
     return mustache.render(mail.toString(), {
       name,
@@ -36,8 +34,8 @@ const sendRegistrationMail: AfterChangeHook<Participant> = async ({
   const message = {
     from: 'Anmeldung BeLeWe <belewe@dpsg1312.de>',
     to: doc.email,
-    subject: 'Deine Anmeldung zum BeLe',
-    html: generateMailText(doc.firstName, doc.confirmationToken),
+    subject: 'Deine Anmeldung zum BeLeWe',
+    html: generateMailText(doc.firstName, doc.id, doc.confirmationToken),
   };
   await payload.sendEmail(message);
 };

@@ -1,5 +1,3 @@
-import {Participant, Participantscontroller} from '../payload-types';
-
 export interface Level {
   slug: string;
   singular: string;
@@ -53,34 +51,6 @@ const LevelsObject: Levels = {
 
 const Levels: Level[] = Object.values(LevelsObject);
 
-const AccessAll: Level = {
-  slug: 'all',
-  singular: 'Alle',
-  plural: 'Alle',
-  color: 'cyan',
-  image: 'Dpsg.png',
-};
-
-const AccessKitchen: Level = {
-  slug: 'kitchen',
-  singular: 'Küche',
-  plural: 'Küche',
-  color: 'purple',
-  image: 'Dpsg.png',
-};
-
-const AccessStrandkorb: Level = {
-  slug: 'strandkorb',
-  singular: 'Strandkorb',
-  plural: 'Strandkorb',
-  color: 'magenta',
-  image: 'Dpsg.png',
-};
-
-const AccessLevels: Level[] = Levels.concat(AccessAll)
-  .concat(AccessKitchen)
-  .concat(AccessStrandkorb);
-
 const None: Level = {
   slug: 'none',
   singular: 'Keine',
@@ -95,29 +65,6 @@ const getLevel = (slug: string): Level => {
   return LevelsObject[slug as LevelText];
 };
 
-const getAccessLevel = (slug: string): Level => {
-  if (slug === 'all') {
-    return AccessAll;
-  }
-  if (slug === 'kitchen') {
-    return AccessKitchen;
-  }
-
-  if (slug === 'strandkorb') {
-    return AccessStrandkorb;
-  }
-  return getLevel(slug);
-};
-
-const getAccessLevelForHeader = (
-  user: Participantscontroller
-): AccessLevelText => {
-  if (user.tribe === '1312' && user.level === 'all') {
-    return 'bevo';
-  }
-  return user.level;
-};
-
 const getLevelWithNone = (slug: string): Level => {
   if (slug === 'none') {
     return None;
@@ -125,31 +72,4 @@ const getLevelWithNone = (slug: string): Level => {
   return getLevel(slug);
 };
 
-const compareLevelsWithRole = (a: Participant, b: Participant): number => {
-  const Compare = {
-    woelflinge: 0,
-    jupfis: 1,
-    pfadis: 2,
-    rover: 3,
-    none: 4,
-  };
-  const compared = Compare[a.level] - Compare[b.level];
-  if (compared === 0) {
-    return 0;
-  }
-  return compared < 0 ? -1 : 1;
-};
-
-export default Levels;
-export {
-  AccessLevels,
-  LevelsWithNone,
-  AccessKitchen,
-  AccessStrandkorb,
-  AccessAll,
-  getLevel,
-  getAccessLevel,
-  getLevelWithNone,
-  compareLevelsWithRole,
-  getAccessLevelForHeader,
-};
+export {LevelsWithNone, getLevel, getLevelWithNone};

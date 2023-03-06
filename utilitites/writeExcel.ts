@@ -1,5 +1,5 @@
 import {Participant} from '../payload-types';
-import {getInsuranceType, getState, RegistrationState} from './Wording';
+import {getInsuranceType, getState} from './Wording';
 import {getTribeForNumber} from './Tribes';
 import {getLevelWithNone} from './Levels';
 import writeXlsxFile, {Schema} from 'write-excel-file';
@@ -37,7 +37,7 @@ const writeExcel = async (participants: Participant[]) => {
       column: 'Geburtstag',
       type: Date,
       format: 'dd.mm.yyyy',
-      value: (participant: Participant) => participant.birthDate,
+      value: (participant: Participant) => new Date(participant.birthDate),
     },
     {
       column: 'Geschlecht',
@@ -63,7 +63,7 @@ const writeExcel = async (participants: Participant[]) => {
     {
       column: 'Telefonnummer',
       type: String,
-      value: (participant: Participant) => participant.phoneNumber ?? '',
+      value: (participant: Participant) => participant.phoneNumber,
     },
     {
       column: 'Straße',
@@ -83,12 +83,12 @@ const writeExcel = async (participants: Participant[]) => {
     {
       column: 'Unverträglichkeiten',
       type: String,
-      value: (participant: Participant) => participant.food.intolerances ?? '',
+      value: (participant: Participant) => participant.food.intolerances,
     },
     {
       column: 'Krankheiten',
       type: String,
-      value: (participant: Participant) => participant.diseases ?? '',
+      value: (participant: Participant) => participant.diseases,
     },
     {
       column: 'Versicherung',
@@ -99,19 +99,23 @@ const writeExcel = async (participants: Participant[]) => {
     {
       column: 'Kommentar',
       type: String,
-      value: (participant: Participant) => participant.comments ?? '',
+      value: (participant: Participant) => participant.comments,
     },
     {
       column: 'Juleica',
       type: String,
-      value: (participant: Participant) => participant.juleica?.number ?? '',
+      value: (participant: Participant) => participant.juleica?.number,
     },
     {
       column: 'Ablaufdatum',
       type: Date,
       format: 'dd.mm.yyyy',
-      value: (participant: Participant) =>
-        participant.juleica?.terminates ?? '',
+      value: (participant: Participant) => {
+        if (participant.juleica?.terminates) {
+          return new Date(participant.juleica.terminates);
+        }
+        return undefined;
+      },
     },
     {
       column: 'UB',
@@ -120,14 +124,25 @@ const writeExcel = async (participants: Participant[]) => {
         if (participant.clearance?.nami) {
           return 'NAMI';
         }
-        return participant.clearance?.idNumber ?? '';
+        return participant.clearance?.idNumber;
       },
+    },
+    {
+      column: 'Anmeldezeitpunkt',
+      type: Date,
+      format: 'dd.mm.yyyy',
+      value: (participant: Participant) => new Date(participant.createdAt),
     },
     {
       column: 'Storniert',
       type: Date,
       format: 'dd.mm.yyyy',
-      value: (participant: Participant) => participant.cancelledAt ?? '',
+      value: (participant: Participant) => {
+        if (participant.cancelledAt) {
+          return new Date(participant.cancelledAt);
+        }
+        return undefined;
+      },
     },
   ];
 

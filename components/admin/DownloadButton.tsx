@@ -4,17 +4,20 @@ import React from 'react';
 const DownloadButton: React.FC = () => (
   <div className="after-dashboard">
     <h4>Download TN-Liste</h4>
-    <ButtonGroup>
+    <div>
       <Button variant="primary">
-        <a href="/api/download">Alle</a>
+        <a href="/download">Alle</a>
       </Button>
       <Button variant="primary">
-        <a href="/api/download?state=confirmed">Bestätigte</a>
+        <a href="/download?state=new">Unbestätigte</a>
       </Button>
       <Button variant="primary">
-        <a href="/api/download?state=cancelled">Stornierte</a>
+        <a href="/download?state=confirmed">Bestätigte</a>
       </Button>
-    </ButtonGroup>
+      <Button variant="primary">
+        <a href="/download?state=cancelled">Stornierte</a>
+      </Button>
+    </div>
   </div>
 );
 

@@ -1,20 +1,10 @@
 import React from 'react';
 import {Container, Row as BSRow} from 'react-bootstrap';
 import {useTimer} from 'react-timer-hook';
-import {GetServerSideUserPropsContext} from '../utilitites/Authentication';
 import Page from '../components/layout/Page';
-import {AccessLevelText, getAccessLevelForHeader} from '../utilitites/Levels';
 import registrationAllowed from '../utilitites/registrationAllowed';
 import RegistrationClosed from '../components/RegistrationClosed';
 import ParticipantsForm from '../components/participants/form/ParticipantsForm';
-
-const getServerSideProps = (context: GetServerSideUserPropsContext) => {
-  return {
-    props: {
-      loggedIn: context.req.user !== undefined,
-    },
-  };
-};
 
 const CountdownView: React.FC = () => {
   const {seconds, minutes, hours, days} = useTimer({
@@ -48,9 +38,9 @@ const CountdownView: React.FC = () => {
   );
 };
 
-const page: React.FC<{loggedIn: boolean}> = ({loggedIn}) => {
+const page: React.FC = () => {
   return (
-    <Page loggedIn={loggedIn} showLogin={true}>
+    <Page loggedIn={false} showLogin={false}>
       <Container className="pt-4 pb-4">
         <BSRow className="text-center pt-4 pb-4">
           <h1>Anmeldung zum Bezirksleitendenwochende</h1>
@@ -68,4 +58,3 @@ const page: React.FC<{loggedIn: boolean}> = ({loggedIn}) => {
 };
 
 export default page;
-export {getServerSideProps};

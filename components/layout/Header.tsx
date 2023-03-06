@@ -2,6 +2,7 @@ import {Button, Container, Nav, Navbar} from 'react-bootstrap';
 import React from 'react';
 import {useRouter} from 'next/router';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export type HeaderProps = {
   loggedIn: boolean;
@@ -17,7 +18,7 @@ const Header: React.FC<HeaderProps> = ({loggedIn, showLogin}: HeaderProps) => {
         <Link prefetch={false} passHref href="/">
           <Navbar.Brand>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               style={{marginTop: -6}}
               src="/images/Bezirkslogo.jpg"
               width={32}
@@ -29,34 +30,6 @@ const Header: React.FC<HeaderProps> = ({loggedIn, showLogin}: HeaderProps) => {
             </span>
           </Navbar.Brand>
         </Link>
-        <Navbar.Toggle />
-        <Container as={Navbar.Collapse}>
-          {loggedIn && (
-            <Nav>
-              <Nav.Link href="/participants">Übersicht</Nav.Link>
-              <Nav.Link href="/config">Einstellungen</Nav.Link>
-            </Nav>
-          )}
-          {showLogin && (
-            <Button
-              variant={loggedIn ? 'outline-light' : 'primary'}
-              style={{marginLeft: 'auto'}}
-              onClick={async () => {
-                if (loggedIn) {
-                  await fetch('/api/participantscontroller/logout', {
-                    method: 'POST',
-                    credentials: 'include',
-                  });
-                  await router.push('/');
-                } else {
-                  await router.push('/login');
-                }
-              }}
-            >
-              {loggedIn ? 'Logout' : 'Login'}
-            </Button>
-          )}
-        </Container>
       </Container>
     </Navbar>
   );

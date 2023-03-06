@@ -6,6 +6,9 @@ import express from 'express';
 import payload from 'payload';
 import {config as dotenv} from 'dotenv';
 import {nextBuild} from 'next/dist/cli/next-build';
+import handleDownload from '../utilitites/api/handleDownload';
+import confirmBookingAPI from '../utilitites/api/confirmBookingAPI';
+import {PayloadRequest} from 'payload/types';
 
 dotenv({
   path: path.resolve(__dirname, '../.env'),
@@ -42,6 +45,13 @@ const start = async () => {
     const nextHandler = nextApp.getRequestHandler();
 
     server.use(payload.authenticate);
+
+    server.get('/download', (req, res) =>
+      handleDownload(req as unknown as PayloadRequest, res)
+    );
+    server.get('/confirm', (req, res) =>
+      confirmBookingAPI(req as unknown as PayloadRequest, res)
+    );
 
     server.get('*', (req, res) => nextHandler(req, res));
 
