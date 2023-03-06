@@ -4,32 +4,25 @@ import {
   CancelButton,
   Comments,
   ContactData,
-  Contacts,
-  CovidVaccination,
   Diseases,
-  EatingBehaviourSelection,
   FoodIntolerances,
   HealthInsurance,
   LeaderInformation,
-  LegalGuardian,
   Membership,
   Personal,
-  Presence,
-  RoleSelection,
   SubmitButton,
-  Swimmer,
-  Vaccinations,
 } from './ParticipantsFormComponents';
-import React, {useState} from 'react';
-import {hasLegalAge, ParticipantRoleText} from '../../../utilitites/Persons';
-import {TeilnehmerIn} from '../../../payload-types';
-import moment from 'moment-timezone';
+import React from 'react';
+import {hasLegalAge} from '../../../utilitites/Persons';
+import {Participant} from '../../../payload-types';
 import defaultFetch from '../../../utilitites/defaultFetch';
 import {useRouter} from 'next/router';
 import {dateSelectionToObject} from '../../../utilitites/Fees';
+import {Dayjs} from 'dayjs';
+import dayjstz from '../../../utilitites/dayjstz';
 
 const EditParticipantsForm: React.FC<{
-  participant: TeilnehmerIn;
+  participant: Participant;
   onCancel: VoidFunction;
 }> = ({participant, onCancel}) => {
   const layout: ColProps = {sm: 10, md: 7, lg: 6, xl: 7, xxl: 8};
@@ -50,20 +43,13 @@ const EditParticipantsForm: React.FC<{
 
   const onSubmit = async (values: {
     presence: string[];
-    birthDate: moment.Moment;
-    course: moment.Moment | null;
-    juleica: {terminates: moment.Moment} | null;
+    birthDate: Dayjs;
+    juleica: {terminates: Dayjs} | null;
   }) => {
-    console.log(values);
-
-    /* * *
-     * Allow helpers to be underage
-     * * *
-      if (role !== "participant" && !hasLegalAge(values.birthDate)) {
-      message.error("Als Leiter- oder Helfer:in musst du min. 18 Jahre alt sein.")
-      return
+    if (!hasLegalAge(values.birthDate)) {
+      message.error('Du musst min. 18 Jahre alt sein.');
+      return;
     }
-    */
 
     const res = await defaultFetch(
       `/api/participants/${participant.id}`,
@@ -72,7 +58,6 @@ const EditParticipantsForm: React.FC<{
         ...values,
         presence: dateSelectionToObject(values.presence),
         birthDate: values.birthDate.toDate(),
-        course: values.course ? values.course.toDate() : undefined,
         juleica: values.juleica
           ? {
               ...values.juleica,
@@ -90,25 +75,6 @@ const EditParticipantsForm: React.FC<{
     }
   };
 
-  const [legalAge, setLegalAge] = useState(
-    hasLegalAge(moment(participant.birthDate))
-  );
-  const [role, setRole] = useState(participant.role);
-  const updateRole = (role: string) => {
-    setRole(role as ParticipantRoleText);
-    if (role === 'helper') {
-      form.setFields([
-        {
-          name: 'tribe',
-          value: 1312,
-        },
-      ]);
-    }
-  };
-
-  const onBirthDateChange = () =>
-    setLegalAge(hasLegalAge(form.getFieldValue('birthDate')));
-
   return (
     <Form
       size="large"
@@ -121,43 +87,31 @@ const EditParticipantsForm: React.FC<{
       validateMessages={validateMessages}
       initialValues={{
         ...participant,
-        presence: Object.entries(participant.presence)
-          .filter(([, val]) => val)
-          .map(([key]) => key),
         address: {
           ...participant.address,
           zipCode: Number(participant.address.zipCode),
         },
         tribe: Number(participant.tribe),
-        birthDate: moment(participant.birthDate),
+        birthDate: dayjstz.tz(participant.birthDate),
         juleica: participant.juleica
           ? {
               ...participant.juleica,
               terminates: participant.juleica.terminates
-                ? moment(participant.juleica.terminates)
+                ? dayjstz.tz(participant.juleica.terminates)
                 : undefined,
             }
           : undefined,
-        course: participant.course ? moment(participant.course) : undefined,
       }}
       onFinish={onSubmit}
     >
-      <RoleSelection roleChanged={e => updateRole(e.target.value)} />
-      <Personal changeBirthDate={onBirthDateChange} />
+      <Personal />
       <ContactData />
       <Address />
-      <Membership role="participant" />
-      {role !== 'participant' && <LeaderInformation form={form} />}
-      <EatingBehaviourSelection />
+      <Membership />
+      <LeaderInformation form={form} />
       <FoodIntolerances />
-      <CovidVaccination />
-      <Vaccinations />
       <Diseases />
       <HealthInsurance />
-      <Swimmer />
-      {!legalAge && <LegalGuardian form={form} />}
-      <Contacts form={form} />
-      <Presence />
       <Comments />
       <SubmitButton text="Änderung speichern" />
       <CancelButton

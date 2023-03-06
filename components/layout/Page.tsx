@@ -1,22 +1,19 @@
 import React from 'react';
 import Header from './Header';
-import {Col, Row} from 'antd';
-import {AccessLevelText} from '../../utilitites/Levels';
+import {Col, Row} from 'react-bootstrap';
 
 export type PageProps = {
-  level: AccessLevelText | 'noUser';
+  loggedIn: boolean;
   showLogin?: boolean;
   children?: React.ReactNode;
 };
 
-const Page: React.FC<PageProps> = ({level, showLogin = true, children}) => (
+const Page: React.FC<PageProps> = ({loggedIn, showLogin = true, children}) => (
   <>
-    <Header level={level} showLogin={showLogin} />
+    <Header loggedIn={loggedIn} showLogin={showLogin} />
     <div className="mb-5 pb-5">{children}</div>
     <Row
-      justify="center"
-      align="middle"
-      gutter={16}
+      className="justify-content-center text-center g-4"
       style={{
         height: 28,
         position: 'fixed',

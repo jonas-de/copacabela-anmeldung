@@ -1,5 +1,4 @@
-import {TeilnehmendenverwalterIn, TeilnehmerIn} from '../payload-types';
-import {compareRoles} from './Persons';
+import {Participant, Participantscontroller} from '../payload-types';
 
 export interface Level {
   slug: string;
@@ -111,7 +110,7 @@ const getAccessLevel = (slug: string): Level => {
 };
 
 const getAccessLevelForHeader = (
-  user: TeilnehmendenverwalterIn
+  user: Participantscontroller
 ): AccessLevelText => {
   if (user.tribe === '1312' && user.level === 'all') {
     return 'bevo';
@@ -126,11 +125,7 @@ const getLevelWithNone = (slug: string): Level => {
   return getLevel(slug);
 };
 
-const compareLevelsWithRole = (a: TeilnehmerIn, b: TeilnehmerIn): number => {
-  const roles = compareRoles(a, b);
-  if (roles !== 0) {
-    return roles;
-  }
+const compareLevelsWithRole = (a: Participant, b: Participant): number => {
   const Compare = {
     woelflinge: 0,
     jupfis: 1,

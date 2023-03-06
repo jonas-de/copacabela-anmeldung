@@ -4,27 +4,19 @@ import {
   Comments,
   Conditions,
   ContactData,
-  Contacts,
-  CovidVaccination,
   Diseases,
-  EatingBehaviourSelection,
   FoodIntolerances,
   FurtherInformation,
   HealthInsurance,
   LeaderInformation,
-  LegalGuardian,
   Membership,
   Personal,
-  RoleSelection,
   SubmitButton,
-  Swimmer,
-  Vaccinations,
 } from './ParticipantsFormComponents';
 import React, {useState} from 'react';
-import {EatingBehaviours} from '../../../utilitites/Wording';
-import {hasLegalAge, ParticipantRoles} from '../../../utilitites/Persons';
+import {hasLegalAge} from '../../../utilitites/Persons';
 import defaultFetch from '../../../utilitites/defaultFetch';
-import moment from 'moment-timezone';
+import {Dayjs} from 'dayjs';
 
 const ParticipantsForm: React.FC = () => {
   const layout: ColProps = {sm: 10, md: 7, lg: 6, xl: 7, xxl: 8};
@@ -44,35 +36,12 @@ const ParticipantsForm: React.FC = () => {
 
   const [form] = Form.useForm();
 
-  const [legalAge, setLegalAge] = useState(false);
-  const [role, setRole] = useState('participant');
-  const updateRole = (role: string) => {
-    setRole(role);
-    if (role === 'helper') {
-      form.setFields([
-        {
-          name: 'tribe',
-          value: 1312,
-        },
-      ]);
-    }
-  };
-
-  const onBirthDateChange = () =>
-    setLegalAge(hasLegalAge(form.getFieldValue('birthDate')));
-
-  const onSubmit = async (values: {birthDate: Date}) => {
-    const bday = values.birthDate as unknown as moment.Moment;
-    if (role !== 'participant' && !hasLegalAge(bday)) {
-      message.error(
-        'Als Leiter- oder Helfer:in musst du min. 18 Jahre alt sein.'
-      );
+  const onSubmit = async (values: {birthDate: Dayjs}) => {
+    if (!hasLegalAge(values.birthDate)) {
+      message.error('Du musst min. 18 Jahre alt sein.');
       return;
     }
-    values.birthDate = bday.toDate();
-    console.log(values);
     const res = await defaultFetch('/api/participants', 'POST', values);
-    console.log(res.status);
     if (res.ok) {
       setRegistered(true);
     } else {
@@ -90,31 +59,18 @@ const ParticipantsForm: React.FC = () => {
       requiredMark={false}
       form={form}
       validateMessages={validateMessages}
-      initialValues={{
-        role: ParticipantRoles[0].slug,
-        food: {
-          eatingBehaviour: EatingBehaviours[0].slug,
-        },
-      }}
       onFinish={onSubmit}
     >
-      <RoleSelection roleChanged={e => updateRole(e.target.value)} />
-      <Personal changeBirthDate={onBirthDateChange} />
+      <Personal />
       <ContactData />
       <Address />
-      <Membership role={role} />
-      {role !== 'participant' && <LeaderInformation form={form} />}
-      <EatingBehaviourSelection />
+      <Membership />
+      <LeaderInformation form={form} />
       <FoodIntolerances />
-      <CovidVaccination />
-      <Vaccinations />
       <Diseases />
       <HealthInsurance />
-      <Swimmer />
-      {!legalAge && <LegalGuardian form={form} />}
-      <Contacts form={form} />
       <Comments />
-      <Conditions isLeader={role !== 'participant'} />
+      <Conditions />
       <SubmitButton text="Bedingungen bestätigen und Anmelden" />
       <FurtherInformation />
     </Form>

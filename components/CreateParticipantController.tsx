@@ -7,46 +7,16 @@ import Levels, {
   AccessKitchen,
   AccessStrandkorb,
 } from '../utilitites/Levels';
-import {TeilnehmendenverwalterIn} from '../payload-types';
+import {Participantscontroller} from '../payload-types';
 
 const CreateParticipantController: React.FC<{
-  userTribe: Tribe;
   visible: boolean;
-  complete: (values: TeilnehmendenverwalterIn) => void;
+  complete: (values: Participantscontroller) => void;
   cancel: VoidFunction;
-}> = ({userTribe, visible, complete, cancel}) => {
+}> = ({visible, complete, cancel}) => {
   const defaultWidth: {width: number} = {width: 240};
 
   const [form] = useForm();
-  const [tribe, setTribe] = useState(userTribe.number);
-  const updateAccess = () => {
-    console.log(form.getFieldValue('tribe'));
-    setTribe(form.getFieldValue('tribe'));
-  };
-
-  const LevelOptions: () => React.ReactElement[] = () => {
-    if (userTribe.number === 1312 && tribe === 1312) {
-      return Levels.concat(AccessKitchen)
-        .concat(AccessStrandkorb)
-        .map(level => (
-          <Select.Option key={level.slug} value={level.slug}>
-            {level.plural}
-          </Select.Option>
-        ));
-    }
-    if (userTribe.number === 1312) {
-      return Levels.concat(AccessAll).map(level => (
-        <Select.Option key={level.slug} value={level.slug}>
-          {level.plural}
-        </Select.Option>
-      ));
-    }
-    return Levels.map(level => (
-      <Select.Option key={level.slug} value={level.slug}>
-        {level.plural}
-      </Select.Option>
-    ));
-  };
 
   return (
     <Modal
@@ -65,16 +35,10 @@ const CreateParticipantController: React.FC<{
         });
       }}
     >
-      <div style={{paddingBottom: 24}}>
-        Es kann jeweils nur ein:e Nutzer:in mit den gleichen Rechten geben.
-      </div>
       <Form
         form={form}
         labelCol={{span: 8}}
         onFinish={complete}
-        initialValues={{
-          tribe,
-        }}
         validateMessages={{
           required: 'Pflichtfeld',
         }}
@@ -93,39 +57,6 @@ const CreateParticipantController: React.FC<{
           rules={[{type: 'email', required: true}]}
         >
           <Input style={defaultWidth} type="email" />
-        </Form.Item>
-        <Form.Item
-          name="tribe"
-          label="Zugriff"
-          rules={[{type: 'number', required: true}]}
-        >
-          <Select
-            style={defaultWidth}
-            onChange={updateAccess}
-            placeholder="Wählen..."
-            disabled={userTribe.number !== 1312}
-          >
-            {userTribe.number === 1312 ? (
-              TribesWithDistrict.map(tribe => (
-                <Select.Option key={tribe.number} value={tribe.number}>
-                  {tribe.name}
-                </Select.Option>
-              ))
-            ) : (
-              <Select.Option value={userTribe.number}>
-                {userTribe.name}
-              </Select.Option>
-            )}
-          </Select>
-        </Form.Item>
-        <Form.Item
-          name="level"
-          label="Stufe"
-          rules={[{type: 'string', required: true}]}
-        >
-          <Select style={defaultWidth} placeholder={'Wählen...'}>
-            {LevelOptions()}
-          </Select>
         </Form.Item>
       </Form>
     </Modal>

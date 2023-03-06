@@ -1,37 +1,26 @@
 import React from 'react';
-import {TeilnehmerIn} from '../../payload-types';
-import {Descriptions, Table, Tag} from 'antd';
+import {Participant} from '../../payload-types';
+import {Descriptions, Tag} from 'antd';
 import {Tribe} from '../../utilitites/Tribes';
-import moment from 'moment-timezone';
-import {getRoleName, hasLegalAge} from '../../utilitites/Persons';
-import {
-  getCovidVaccinationState,
-  getEatingBehaviour,
-  getGender,
-  getInsuranceType,
-  getState,
-} from '../../utilitites/Wording';
+import {getGender, getInsuranceType, getState} from '../../utilitites/Wording';
 import {getLevelWithNone} from '../../utilitites/Levels';
 import Image from 'next/image';
-import {dateObjectToText} from '../../utilitites/Fees';
-import LocationView from '../LocationView';
+import dayjstz from '../../utilitites/dayjstz';
 
 export type ShowParticipantProps = {
   extra: React.ReactNode;
-  participant: TeilnehmerIn;
+  participant: Participant;
   tribe: Tribe;
-  isBevo: boolean;
 };
 
 const ParticipantData: React.FC<ShowParticipantProps> = ({
   extra,
   participant,
   tribe,
-  isBevo,
 }) => {
   const level = getLevelWithNone(participant.level);
   const state = getState(participant.state);
-  const createdAt = (participant as TeilnehmerIn & {createdAt: string})[
+  const createdAt = (participant as Participant & {createdAt: string})[
     'createdAt'
   ];
 
@@ -47,18 +36,10 @@ const ParticipantData: React.FC<ShowParticipantProps> = ({
       bordered
       style={{overflowX: 'auto'}}
     >
-      <Descriptions.Item label="Rolle & Status">
-        {getRoleName(participant.role)}
+      <Descriptions.Item label="Status">
         <Tag style={{marginLeft: 16}} color={state.color}>
           {state.name}
         </Tag>
-        <Tag
-          style={{marginLeft: 8}}
-          color={participant.lateRegistration ? 'orange' : 'green'}
-        >
-          {participant.lateRegistration ? 'Nachmeldung' : 'Normale Buchung'}
-        </Tag>
-        <LocationView tn={participant} isBevo={isBevo} />
       </Descriptions.Item>
       <Descriptions.Item label="Vorname">
         {participant.firstName}
@@ -70,7 +51,7 @@ const ParticipantData: React.FC<ShowParticipantProps> = ({
         {participant.orderId}
       </Descriptions.Item>
       <Descriptions.Item label="Geburtsdatum">
-        {moment(participant.birthDate).format('DD.MM.YYYY')}
+        {dayjstz.tz(participant.birthDate).format('DD.MM.YYYY')}
       </Descriptions.Item>
       <Descriptions.Item label="Geschlecht">
         {getGender(participant.gender).name}
@@ -93,25 +74,11 @@ const ParticipantData: React.FC<ShowParticipantProps> = ({
         />
         {` ${tribe.name}`}
       </Descriptions.Item>
-      {participant.role !== 'helper' && (
-        <Descriptions.Item label="Stufe">
-          {<Tag color={level.color}>{level.singular}</Tag>}
-        </Descriptions.Item>
-      )}
-      <Descriptions.Item label="Essgewohnheiten">
-        {getEatingBehaviour(participant.food.eatingBehaviour).name}
+      <Descriptions.Item label="Stufe">
+        {<Tag color={level.color}>{level.singular}</Tag>}
       </Descriptions.Item>
       <Descriptions.Item label="Unverträglichkeiten">
         {participant.food.intolerances}
-      </Descriptions.Item>
-      <Descriptions.Item label="Corona-Impfstatus">
-        {getCovidVaccinationState(participant.vaccinations.covid).name}
-      </Descriptions.Item>
-      <Descriptions.Item label="Tetanus-Impfung">
-        {participant.vaccinations.tetanus ? 'Ja' : 'Nein'}
-      </Descriptions.Item>
-      <Descriptions.Item label="FSME-Impfung">
-        {participant.vaccinations.fsme ? 'Ja' : 'Nein'}
       </Descriptions.Item>
       <Descriptions.Item label="Krankheiten">
         {participant.diseases}
@@ -119,65 +86,29 @@ const ParticipantData: React.FC<ShowParticipantProps> = ({
       <Descriptions.Item label="Krankenversicherung">
         {getInsuranceType(participant.healthInsurance).name}
       </Descriptions.Item>
-      <Descriptions.Item label="Schwimmer:in">
-        {participant.swimmer ? 'Ja' : 'Nein'}
-      </Descriptions.Item>
-      {!hasLegalAge(moment(participant.birthDate)) && (
-        <Descriptions.Item label="Erziehungsberechtigte:r">
-          <pre>{`${participant.legalGuardian!.name}\t${
-            participant.legalGuardian!.phoneNumber
-          }`}</pre>
-        </Descriptions.Item>
-      )}
-      <Descriptions.Item label="Notfallkontakte">
-        {
-          <Table
-            rowKey={'name'}
-            dataSource={participant.contacts}
-            showHeader={false}
-            pagination={false}
-            scroll={{x: true}}
-          >
-            <Table.Column dataIndex={'name'} key={'name'} />
-            <Table.Column dataIndex={'phoneNumber'} key={'phoneNumber'} />
-          </Table>
-        }
-      </Descriptions.Item>
-      <Descriptions.Item label="Anwesenheit">
-        {dateObjectToText(participant.presence)}
-      </Descriptions.Item>
       <Descriptions.Item label="Anmerkungen">
         {participant.comments}
       </Descriptions.Item>
-      {participant.role !== 'participant' && (
-        <>
-          <Descriptions.Item label="Juleica">
-            {participant.juleica?.number
-              ? participant.juleica.number
-              : 'keine Juleica'}
-            {participant.juleica?.terminates
-              ? `\tgültig bis ${moment(participant.juleica.terminates).format(
-                  'DD.MM.YYYY'
-                )}`
-              : ''}
-          </Descriptions.Item>
-          <Descriptions.Item label="Unbedenklichkeitsbescheinigung">
-            {participant.clearance &&
-              (participant.clearance.nami
-                ? 'In NaMi eingetragen'
-                : participant.clearance.idNumber ||
-                  'Keine Unbedenklichkeitsbescheinigung')}
-          </Descriptions.Item>
-          <Descriptions.Item label="2d/2e-Schulung">
-            {participant.course
-              ? moment(participant.course).format('DD.MM.YYYY')
-              : 'Keine 2d/2e-Schulung'}
-          </Descriptions.Item>
-        </>
-      )}
+      <Descriptions.Item label="Juleica">
+        {participant.juleica?.number
+          ? participant.juleica.number
+          : 'keine Juleica'}
+        {participant.juleica?.terminates
+          ? `\tgültig bis ${dayjstz
+              .tz(participant.juleica.terminates)
+              .format('DD.MM.YYYY')}`
+          : ''}
+      </Descriptions.Item>
+      <Descriptions.Item label="Unbedenklichkeitsbescheinigung">
+        {participant.clearance &&
+          (participant.clearance.nami
+            ? 'In NaMi eingetragen'
+            : participant.clearance.idNumber ||
+              'Keine Unbedenklichkeitsbescheinigung')}
+      </Descriptions.Item>
       {createdAt && (
         <Descriptions.Item label="Anmeldezeitpunkt">
-          {moment(createdAt).format('DD.MM.YYYY HH:mm')}
+          {dayjstz.tz(createdAt).format('DD.MM.YYYY HH:mm')}
         </Descriptions.Item>
       )}
     </Descriptions>

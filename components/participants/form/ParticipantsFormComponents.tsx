@@ -7,33 +7,20 @@ import {
   Input,
   InputNumber,
   Radio,
-  RadioChangeEvent,
   Row,
   Select,
-  Tooltip,
 } from 'antd';
 import React, {useState} from 'react';
+import {Genders, InsuranceTypes} from '../../../utilitites/Wording';
 import {
-  CovidVaccinationStates,
-  EatingBehaviours,
-  Genders,
-  InsuranceTypes,
-} from '../../../utilitites/Wording';
-import {
-  District,
   getTribeForNumber,
   TribesWithDistrict,
 } from '../../../utilitites/Tribes';
 import {LevelsWithNone} from '../../../utilitites/Levels';
-import {ParticipantRoles} from '../../../utilitites/Persons';
 import {FormInstance} from 'antd/es/form/Form';
-import {ShouldUpdate} from 'rc-field-form/es/Field';
 import deDE from 'antd/lib/date-picker/locale/de_DE';
-import 'moment-timezone/locale/de';
-import {Rule, StoreValue} from 'rc-field-form/es/interface';
+import {Rule} from 'rc-field-form/es/interface';
 import Image from 'next/image';
-import {dateArray} from '../../../utilitites/Fees';
-import {CloseOutlined, EnterOutlined} from '@ant-design/icons/lib/icons';
 
 const defaultRules: Rule[] = [{type: 'string', required: true}];
 const defaultWidth: {width: number} = {width: 240};
@@ -43,14 +30,7 @@ const doubleWidth: {width: number; maxWidth: string} = {
 };
 const defaultGutter: [number, number] = [8, 24];
 
-const updateOnBirthdateChange: ShouldUpdate = ({prevValues, curValues}) => {
-  console.log(prevValues.birthDate !== curValues.birthDate);
-  return prevValues.birthDate !== curValues.birthDate;
-};
-
-const Personal: React.FC<{changeBirthDate: VoidFunction}> = ({
-  changeBirthDate,
-}) => (
+const Personal: React.FC = () => (
   <Form.Item label="Persönliches">
     <Input.Group>
       <Row gutter={defaultGutter}>
@@ -104,7 +84,6 @@ const Personal: React.FC<{changeBirthDate: VoidFunction}> = ({
               style={defaultWidth}
               picker="date"
               format="DD.MM.YYYY"
-              onChange={changeBirthDate}
             />
           </Form.Item>
         </Col>
@@ -129,27 +108,8 @@ const Personal: React.FC<{changeBirthDate: VoidFunction}> = ({
     </Input.Group>
   </Form.Item>
 );
-const Membership: React.FC<{tribe?: number; role: string}> = ({
-  tribe,
-  role,
-}) => {
+const Membership: React.FC<{tribe?: number}> = ({tribe}) => {
   const TribeSelection: () => React.ReactElement[] = () => {
-    if (role === 'helper') {
-      return [
-        <Select.Option value={District.number} key={District.number}>
-          <div style={{alignItems: 'center'}}>
-            <Image
-              className="pe-2"
-              src={`/images/${District.image}`}
-              width={35}
-              height={32}
-              alt={District.name}
-            />
-            {District.name}
-          </div>
-        </Select.Option>,
-      ];
-    }
     if (tribe !== undefined) {
       const tribeObject = getTribeForNumber(tribe);
       return [
@@ -187,11 +147,7 @@ const Membership: React.FC<{tribe?: number; role: string}> = ({
     <Form.Item
       label="Stamm & Stufe"
       style={{marginTop: -4}}
-      tooltip={
-        role === 'leader'
-          ? 'Wähle deinen Stamm und die Stufe, die du leitest.'
-          : undefined
-      }
+      tooltip="Wähle deinen Stamm und die Stufe, die du leitest."
     >
       <Input.Group>
         <Row gutter={defaultGutter}>
@@ -207,7 +163,7 @@ const Membership: React.FC<{tribe?: number; role: string}> = ({
                 placeholder="Wählen..."
                 showSearch
                 style={defaultWidth}
-                disabled={role === 'helper' || tribe !== undefined}
+                disabled={tribe !== undefined}
                 filterOption={(inputValue, option) => {
                   const tribe = getTribeForNumber(option!.value as number);
                   return (
@@ -220,44 +176,28 @@ const Membership: React.FC<{tribe?: number; role: string}> = ({
               </Select>
             </Form.Item>
           </Col>
-          {role !== 'helper' && (
-            <Col>
-              <Form.Item
-                name="level"
-                label="Stufe"
-                noStyle
-                required
-                rules={defaultRules}
-              >
-                <Select placeholder="Wählen..." showSearch style={defaultWidth}>
-                  {LevelsWithNone.map(level => (
-                    <Select.Option key={level.slug} value={level.slug}>
-                      {level.singular}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
-          )}
+          <Col>
+            <Form.Item
+              name="level"
+              label="Stufe"
+              noStyle
+              required
+              rules={defaultRules}
+            >
+              <Select placeholder="Wählen..." showSearch style={defaultWidth}>
+                {LevelsWithNone.map(level => (
+                  <Select.Option key={level.slug} value={level.slug}>
+                    {level.singular}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
         </Row>
       </Input.Group>
     </Form.Item>
   );
 };
-
-const Swimmer: React.FC = () => (
-  <Form.Item
-    name="swimmer"
-    label="Schwimmer:in"
-    required
-    rules={[{type: 'boolean', required: true}]}
-  >
-    <Radio.Group>
-      <Radio value={true}>Ja</Radio>
-      <Radio value={false}>Nein</Radio>
-    </Radio.Group>
-  </Form.Item>
-);
 
 const Address: React.FC = () => (
   <Form.Item label="Adresse">
@@ -303,22 +243,6 @@ const Address: React.FC = () => (
   </Form.Item>
 );
 
-const EatingBehaviourSelection: React.FC = () => (
-  <Form.Item
-    label="Essgewohnheiten"
-    name={['food', 'eatingBehaviour']}
-    required
-  >
-    <Select style={doubleWidth}>
-      {EatingBehaviours.map(behaviour => (
-        <Select.Option key={behaviour.slug} value={behaviour.slug}>
-          {behaviour.name}
-        </Select.Option>
-      ))}
-    </Select>
-  </Form.Item>
-);
-
 const FoodIntolerances: React.FC = () => (
   <Form.Item
     label="Unverträglichkeiten"
@@ -353,51 +277,6 @@ const Diseases: React.FC = () => (
     tooltip="Hier kannst du alle Krankenheiten und Medikamente angeben, die wir beachten müssen."
   >
     <Input.TextArea style={doubleWidth} />
-  </Form.Item>
-);
-
-const Vaccinations: React.FC = () => (
-  <>
-    <Form.Item
-      name={['vaccinations', 'tetanus']}
-      label="Tetanus-Impfung"
-      required
-      rules={[{required: true, type: 'boolean'}]}
-    >
-      <Radio.Group>
-        <Radio value={true}>Ja</Radio>
-        <Radio value={false}>Nein</Radio>
-      </Radio.Group>
-    </Form.Item>
-    <Form.Item
-      name={['vaccinations', 'fsme']}
-      label="FSME-Impfung"
-      required
-      rules={[{required: true, type: 'boolean'}]}
-    >
-      <Radio.Group>
-        <Radio value={true}>Ja</Radio>
-        <Radio value={false}>Nein</Radio>
-      </Radio.Group>
-    </Form.Item>
-  </>
-);
-
-const CovidVaccination: React.FC = () => (
-  <Form.Item
-    label="Corona-Impfstatus"
-    name={['vaccinations', 'covid']}
-    required
-    rules={defaultRules}
-    tooltip="Wir gehen davon aus, dass das Lager unter 2G / 2G Plus oder ähnlichen Bedingungen stattfindet. Um besser planen zu können, fragen wir bereits jetzt den Impfstatus (noch) auf freiwilliger Basis ab. Mehr dazu in den Teilnahmebedingungen"
-  >
-    <Select style={doubleWidth}>
-      {CovidVaccinationStates.map(state => (
-        <Select.Option key={state.slug} value={state.slug}>
-          {state.name}
-        </Select.Option>
-      ))}
-    </Select>
   </Form.Item>
 );
 
@@ -439,156 +318,9 @@ const ContactData: React.FC = () => (
   </Form.Item>
 );
 
-const LegalGuardian: React.FC<{form: FormInstance}> = ({form}) => (
-  <Form.Item label="Erziehungsberechtigte:r">
-    <Row gutter={defaultGutter}>
-      <Col>
-        <Form.Item
-          name={['legalGuardian', 'name']}
-          label="Name"
-          noStyle
-          rules={defaultRules}
-          required
-        >
-          <Input type="name" placeholder="Name" style={defaultWidth} />
-        </Form.Item>
-      </Col>
-      <Col>
-        <Form.Item
-          name={['legalGuardian', 'phoneNumber']}
-          label="Telefonnummer"
-          noStyle
-          rules={defaultRules}
-          required
-        >
-          <Input type="name" placeholder="Telefon" style={defaultWidth} />
-        </Form.Item>
-      </Col>
-      <Col>
-        <Tooltip
-          title="Telefonnummer übernehmen"
-          color="white"
-          overlayInnerStyle={{
-            color: 'black',
-            textAlign: 'center',
-          }}
-        >
-          <EnterOutlined
-            onClick={() =>
-              form.setFields([
-                {
-                  name: ['legalGuardian', 'phoneNumber'],
-                  value: form.getFieldValue('phoneNumber'),
-                },
-              ])
-            }
-          />
-        </Tooltip>
-      </Col>
-    </Row>
-  </Form.Item>
-);
-
-const Contacts: React.FC<{form: FormInstance}> = ({form}) => {
-  type FormListAdd = (defaultValue?: StoreValue, insertIndex?: number) => void;
-
-  const AddContactButton: React.FC<{add: FormListAdd}> = ({add}) => (
-    <Form.Item style={{marginTop: 8}}>
-      <Button type="dashed" onClick={add} style={doubleWidth}>
-        Notfallkontakt hinzufügen
-      </Button>
-    </Form.Item>
-  );
-
-  const ContactRow: React.FC<{
-    name: number | string;
-    index: number;
-    remove: (index: number) => void;
-  }> = ({name, index, remove}) => (
-    <Input.Group style={{marginTop: 8}}>
-      <Row gutter={defaultGutter} align="middle">
-        <Col>
-          <Form.Item
-            name={[name, 'name']}
-            label="Name"
-            noStyle
-            rules={defaultRules}
-          >
-            <Input type="name" placeholder="Name" style={defaultWidth} />
-          </Form.Item>
-        </Col>
-        <Col>
-          <Form.Item
-            name={[name, 'phoneNumber']}
-            label="Telefonnummer"
-            noStyle
-            rules={defaultRules}
-          >
-            <Input
-              type="tel"
-              placeholder="Telefonnummer"
-              style={defaultWidth}
-            />
-          </Form.Item>
-        </Col>
-        <Col>
-          <CloseOutlined onClick={() => remove(index)} />
-        </Col>
-      </Row>
-    </Input.Group>
-  );
-
-  return (
-    <Form.Item label="Kontakte" shouldUpdate={updateOnBirthdateChange}>
-      <Form.List name="contacts">
-        {(fields, {add, remove}) => (
-          <>
-            {fields.map(({key, name}, index) => (
-              <ContactRow key={key} name={name} index={index} remove={remove} />
-            ))}
-            {fields.length < 4 && (
-              <AddContactButton
-                add={() => {
-                  add();
-                  console.log(form.getFieldValue('contacts'));
-                }}
-              />
-            )}
-          </>
-        )}
-      </Form.List>
-    </Form.Item>
-  );
-};
-
-const Presence: React.FC = () => (
-  <Form.Item name="presence" label="Anwesenheit">
-    <Checkbox.Group
-      options={dateArray.map(date => ({
-        label: `${String(date).padStart(2, '0')}.`,
-        value: String(date),
-      }))}
-    ></Checkbox.Group>
-  </Form.Item>
-);
-
 const Comments: React.FC = () => (
   <Form.Item name="comments" label="Anmerkungen">
     <Input.TextArea style={doubleWidth} />
-  </Form.Item>
-);
-
-const RoleSelection: React.FC<{roleChanged: (e: RadioChangeEvent) => void}> = ({
-  roleChanged,
-}) => (
-  <Form.Item name="role" label="Rolle" required rules={defaultRules}>
-    <Radio.Group onChange={roleChanged}>
-      {ParticipantRoles.map(role => (
-        <Radio key={role.slug} value={role.slug}>
-          {role.name}
-        </Radio>
-      ))}
-    </Radio.Group>
   </Form.Item>
 );
 
@@ -683,8 +415,8 @@ const SubmitButton: React.FC<{text: string}> = ({text}) => (
 const FurtherInformation: React.FC = () => (
   <Form.Item label=" ">
     <p style={{...doubleWidth, textAlign: 'center'}}>
-      Du erhälst alle nötigen Dokumente per Mail. Bitte gib diese unterschrieben
-      bei deinem Stamm ab.
+      Du erhälst gleich eine E-Mail mit einem Bestätigungslink. Deine Anmeldung
+      ist erst gültig, wenn du deine Buchung über diesen Link bestätigt hast.
     </p>
   </Form.Item>
 );
@@ -697,78 +429,12 @@ const CancelButton: React.FC<{onClick: VoidFunction}> = ({onClick}) => (
   </Form.Item>
 );
 
-const Conditions: React.FC<{isLeader: boolean}> = ({isLeader}) => (
+const Conditions: React.FC = () => (
   <Form.Item label="Teilnahmebedingungen">
     <p style={{...doubleWidth, textAlign: 'justify'}}>
       Ich erkläre mich mit allen folgenden Punkten einverstanden:
       <br style={{marginTop: 8, marginBottom: 12}} />
-      Maßnahmen, die vom örtlichen Arzt/ Ärztin für dringend notwendig gehalten
-      werden, werden im gegebenen Fall ohne Rücksprache mit mir bei meinem Kind
-      durchgeführt. Ich stelle die Leiter:innen und den Träger von jeglichen
-      Haftungsansprüchen frei, die im Zusammenhang mit der vereinbarten und
-      abgestimmten Einnahme von Medikamenten durch mein Kind entstehen. Ich habe
-      zur Kenntnis genommen, dass die Leiter:innen in keiner Weise für eine
-      solche Tätigkeit ausgebildet sind. Ich versichere ferner, dass mein Kind
-      die angegebenen Medikamente schon mehrfach eingenommen hat (auch in
-      Kombination mit den anderen genannten Medikamenten), ohne dass es hierbei
-      zu unerwünschten Nebenwirkungen kam. Ich versichere weiterhin, dass die
-      genannten Medikamente nach ärztlicher Auskunft keine lebensbedrohlichen
-      Nebenwirkungen haben.
-      <br style={{marginBottom: 12}} />
-      Des Weiteren stelle ich die Leiter:innen und den Träger von jeglichen
-      Haftungsansprüchen frei, die im Zusammenhang mit Erste-Hilfe-Maßnahmen
-      stehen.
-      <br style={{marginBottom: 12}} />
-      Während des Lagers sind die Lagerregeln, geltenden Hygienevorschriften
-      (folgen zu gegebener Zeit) sowie die Anweisungen der Leiter:innen
-      jederzeit zu befolgen. Bei Verstößen kann die Lagerleitung die weitere
-      Teilnahme untersagen. In diesem Fall kann der/die Teilnehmer:in in
-      Absprache mit dem/der Erziehungsberechtigten entweder abgeholt werden (ein
-      Betreten des Platzes ist dabei untersagt) oder allein mit öffentlichen
-      Verkehrsmitteln nach Hause fahren.
-      <br style={{marginBottom: 12}} />
-      Des Weiteren kann eine vorzeitige oder direkte Heimreise durch einen
-      positiven Coronatest auf dem Lager oder bei fehlenden / ungültigen
-      notwendigen Dokumenten (z.B. zertifizierter Test-/Impfnachweis) nötig
-      sein. Die Kosten für eine vorzeitige oder direkte Heimreise sind in jedem
-      Fall selbst zu tragen.
-      <br style={{marginBottom: 12}} />
-      Außerdem geht die Lagerleitung derzeit davon aus und behält sich vor, dass
-      das Lager unter 2G / 2G Plus oder ähnlichen Bedingungen stattfindet, wenn
-      dies nach geltenden Bestimmungen in Deutschland oder Österreich bzw. bei
-      der Einreise nach Österreich oder der Wiedereinreise nach Deutschland
-      nötig ist oder von der Lagerleitung als sinnvoll empfunden wird. Die
-      Lagerleitung behält sich außerdem vor, geltende gesetzliche Vorschriften
-      um eigene Regelungen wie z.B. einer Testpflicht vor Abreise zu erweitern.
-      Ich bin selbst dafür verantwortlich, die aufgestellten Bestimmungen
-      einzuhalten, ansonsten ist eine Teilnahme am Lager nicht möglich. Sollte
-      eine Teilnahme durch Quarantäne- oder Isolationsregeln nicht möglich sein,
-      gelten die normalen Stornobedingungen. Die Lagerleitung empfiehlt den
-      Abschluss einer Reiserücktrittsversicherung. Sollte sich die Lagerleitung
-      dazu entscheiden, das Lager abzusagen, werden die gezahlten Beiträge bis
-      auf unvermeidbare, bereits vorher angefallene Kosten bis zum Jahresende
-      2022 erstattet.
-      <br style={{marginBottom: 12}} />
-      Teilnehmer:innen werden kürzere Strecken vor Ort möglicherweise mit dem
-      Auto gefahren. Zudem schlafen Teilnehmer:innen unter Umständen nicht
-      geschlechtergetrennt. Außerdem dürfen Teilnehmer:innen, welche bereits 16
-      Jahre alt sind, gemäß dem Jugendschutzgesetz unter Aufsicht gegebenenfalls
-      alkoholische Getränke zu sich nehmen.
-      <br style={{marginBottom: 12}} />
-      Die angegebenen Daten werden zur Durchführung des Lagers gespeichert,
-      verarbeitet und spätestens 6 Monate nach der Abrechnung des Lagers oder
-      nach dem Ablauf gesetzlicher Fristen zur Kontaktdatenverfolgung wieder
-      gelöscht. Außerdem können die angegebenen Daten nach geltenden Auflagen
-      zur Kontaktdatenverfolgung an deutsche und/oder österreichische Behörden
-      weitergegeben werden.
-      <br style={{marginBottom: 12}} />
-      {isLeader && (
-        <strong>
-          Als Leiter- oder Helfer:in erkläre ich mich außerdem mit allen
-          weiteren Bedingungen einverstanden, die mir zusammen mit der Anmeldung
-          zugeschickt werden.
-        </strong>
-      )}
+      Sauuuuufeeennnnnnnnnn🍻🍻🍻🍻🍻
     </p>
   </Form.Item>
 );
@@ -776,19 +442,11 @@ const Conditions: React.FC<{isLeader: boolean}> = ({isLeader}) => (
 export {
   Personal,
   Membership,
-  Swimmer,
   Address,
-  EatingBehaviourSelection,
   FoodIntolerances,
   HealthInsurance,
   Diseases,
-  Vaccinations,
-  CovidVaccination,
   ContactData,
-  LegalGuardian,
-  Contacts,
-  RoleSelection,
-  Presence,
   Comments,
   LeaderInformation,
   SubmitButton,

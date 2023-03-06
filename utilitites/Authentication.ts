@@ -1,7 +1,7 @@
 import {GetServerSidePropsContext, GetServerSidePropsResult} from 'next';
 import {IncomingMessage} from 'http';
 import {NextApiRequestCookies} from 'next/dist/server/api-utils';
-import {TeilnehmendenverwalterIn} from '../payload-types';
+import {Participantscontroller} from '../payload-types';
 import {ParsedUrlQuery} from 'querystring';
 import {PreviewData} from 'next/types';
 
@@ -11,7 +11,7 @@ export type GetServerSideUserPropsContext<
 > = GetServerSidePropsContext<Q, D> & {
   req: IncomingMessage & {
     cookies: NextApiRequestCookies;
-    user: TeilnehmendenverwalterIn;
+    user: Participantscontroller;
   };
 };
 

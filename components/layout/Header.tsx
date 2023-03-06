@@ -2,15 +2,15 @@ import {Button, Container, Nav, Navbar} from 'react-bootstrap';
 import React from 'react';
 import {useRouter} from 'next/router';
 import Link from 'next/link';
-import {AccessLevelText} from '../../utilitites/Levels';
 
 export type HeaderProps = {
-  level: AccessLevelText | 'noUser';
+  loggedIn: boolean;
   showLogin: boolean;
 };
 
-const Header: React.FC<HeaderProps> = ({level, showLogin}: HeaderProps) => {
+const Header: React.FC<HeaderProps> = ({loggedIn, showLogin}: HeaderProps) => {
   const router = useRouter();
+
   return (
     <Navbar variant="dark" style={{background: 'var(--dpsg-blue)'}} expand="sm">
       <Container fluid="md">
@@ -19,39 +19,30 @@ const Header: React.FC<HeaderProps> = ({level, showLogin}: HeaderProps) => {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               style={{marginTop: -6}}
-              src="/images/Copacabela-100.png"
+              src="/images/Bezirkslogo.jpg"
               width={32}
               height={32}
-              alt="CopacaBela-Logo"
+              alt="Bezirkslogo"
             />
-            {' CopacaBeLa'}
+            <span style={{marginLeft: 8, textDecoration: 'none'}}>
+              Bezirk München-Isar
+            </span>
           </Navbar.Brand>
         </Link>
         <Navbar.Toggle />
         <Container as={Navbar.Collapse}>
-          {level !== 'noUser' && (
+          {loggedIn && (
             <Nav>
-              {level !== 'kitchen' && level !== 'strandkorb' && (
-                <Nav.Link href="/participants">Übersicht</Nav.Link>
-              )}
-              {(level === 'all' || level === 'bevo') && (
-                <Nav.Link href="/participants/config">Einstellungen</Nav.Link>
-              )}
-              {(level === 'bevo' || level === 'kitchen') && (
-                <Nav.Link href="/food">Essverhalten</Nav.Link>
-              )}
-              {level === 'bevo' && <Nav.Link href="/stats">Statistik</Nav.Link>}
-              {(level === 'bevo' || level === 'strandkorb') && (
-                <Nav.Link href="/strandkorb">Strandkorb</Nav.Link>
-              )}
+              <Nav.Link href="/participants">Übersicht</Nav.Link>
+              <Nav.Link href="/config">Einstellungen</Nav.Link>
             </Nav>
           )}
           {showLogin && (
             <Button
-              variant={level !== 'noUser' ? 'outline-light' : 'primary'}
+              variant={loggedIn ? 'outline-light' : 'primary'}
               style={{marginLeft: 'auto'}}
               onClick={async () => {
-                if (level !== 'noUser') {
+                if (loggedIn) {
                   await fetch('/api/participantscontroller/logout', {
                     method: 'POST',
                     credentials: 'include',
@@ -62,7 +53,7 @@ const Header: React.FC<HeaderProps> = ({level, showLogin}: HeaderProps) => {
                 }
               }}
             >
-              {level !== 'noUser' ? 'Logout' : 'Login'}
+              {loggedIn ? 'Logout' : 'Login'}
             </Button>
           )}
         </Container>

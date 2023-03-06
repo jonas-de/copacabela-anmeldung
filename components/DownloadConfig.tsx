@@ -1,4 +1,4 @@
-import {Form, Modal, Radio, Checkbox, Space} from 'antd';
+import {Checkbox, Form, Modal, Radio, Space} from 'antd';
 import React from 'react';
 import {BevoFields, Fields} from '../utilitites/CSVCreator';
 import {AccessLevelText} from '../utilitites/Levels';

@@ -5,18 +5,15 @@
  * and re-run `payload generate:types` to regenerate this file.
  */
 
-export interface Config {}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "participantscontroller".
- */
-export interface TeilnehmendenverwalterIn {
+export interface Config {
+  collections: {
+    participantscontroller: Participantscontroller;
+    participants: Participant;
+  };
+  globals: {};
+}
+export interface Participantscontroller {
   id: string;
-  email?: string;
-  resetPasswordToken?: string;
-  resetPasswordExpiration?: string;
-  loginAttempts?: number;
-  lockUntil?: string;
   name: string;
   tribe:
     | '131202'
@@ -30,22 +27,18 @@ export interface TeilnehmendenverwalterIn {
     | '131212'
     | '131213'
     | '1312';
-  level:
-    | 'woelflinge'
-    | 'jupfis'
-    | 'pfadis'
-    | 'rover'
-    | 'all'
-    | 'kitchen'
-    | 'strandkorb';
+  level: 'woelflinge' | 'jupfis' | 'pfadis' | 'rover' | 'all' | 'kitchen' | 'strandkorb';
+  email?: string;
+  resetPasswordToken?: string;
+  resetPasswordExpiration?: string;
+  loginAttempts?: number;
+  lockUntil?: string;
+  createdAt: string;
+  updatedAt: string;
+  password?: string;
 }
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "participants".
- */
-export interface TeilnehmerIn {
+export interface Participant {
   id: string;
-  role: 'participant' | 'leader' | 'helper';
   orderId: number;
   firstName: string;
   lastName: string;
@@ -72,90 +65,22 @@ export interface TeilnehmerIn {
     | '1312';
   level: 'woelflinge' | 'jupfis' | 'pfadis' | 'rover' | 'none';
   food: {
-    eatingBehaviour: 'vegetarian' | 'vegan' | 'meat';
     intolerances?: string;
-  };
-  vaccinations: {
-    tetanus: boolean;
-    fsme: boolean;
-    covid: 'na' | 'no' | 'yes' | 'boostered';
   };
   diseases?: string;
   healthInsurance: 'gkv' | 'pkv';
-  swimmer: boolean;
-  legalGuardian?: {
-    name?: string;
-    phoneNumber?: string;
-  };
-  contacts?: {
-    name: string;
-    phoneNumber: string;
-    id?: string;
-  }[];
-  presence: {
-    '4': boolean;
-    '5': boolean;
-    '6': boolean;
-    '7': boolean;
-    '8': boolean;
-    '9': boolean;
-    '10': boolean;
-    '11': boolean;
-  };
   comments?: string;
-  juleica?: {
+  juleica: {
     number?: string;
     terminates?: string;
   };
-  clearance?: {
+  clearance: {
     idNumber?: string;
     nami?: boolean;
   };
-  course?: string;
-  receivedRegistration: boolean;
-  receivedLeaderInfo: boolean;
-  receivedPhotoPermission: 'no' | 'yes' | 'never';
-  review: {
-    by?: string;
-    at?: string;
-    course: boolean;
-    juleica: boolean;
-    clearance: boolean;
-  };
   state: 'new' | 'confirmed' | 'cancelled';
   cancelledAt?: string;
-  lateRegistration?: boolean;
-  strandkorbCredit: number;
-  location: 'home' | 'onsite' | 'offsite' | 'backHome';
-  wristband?: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "strandkorb-items".
- */
-export interface Strandkorbartikel {
-  id: string;
-  name: string;
-  price: number;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "strandkorb-transactions".
- */
-export interface Strandkorbtransaktion {
-  id: string;
-  participant: string | TeilnehmerIn;
-  amount: number;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
- */
-export interface User {
-  id: string;
-  email?: string;
-  resetPasswordToken?: string;
-  resetPasswordExpiration?: string;
-  loginAttempts?: number;
-  lockUntil?: string;
+  confirmationToken: string;
+  createdAt: string;
+  updatedAt: string;
 }

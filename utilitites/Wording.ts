@@ -1,4 +1,4 @@
-import {TeilnehmerIn} from '../payload-types';
+import {Participant} from '../payload-types';
 
 export interface Wording {
   slug: string;
@@ -84,7 +84,7 @@ const RegistrationStates: RegistrationState[] = Object.values(
   RegistrationStatesObject
 );
 
-const compareRegistrationStates = (a: TeilnehmerIn, b: TeilnehmerIn) => {
+const compareRegistrationStates = (a: Participant, b: Participant) => {
   const Compare = {
     new: 0,
     confirmed: 1,
