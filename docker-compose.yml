@@ -1,6 +1,6 @@
 services:
   website:
-    image: belewe2023
+    image: ghcr.io/jonas-de/copacabela-anmeldung:belewe
     build: .
     restart: unless-stopped
     depends_on:
